@@ -1,0 +1,118 @@
+# GridBot Docker Ignore File
+# Excludes unnecessary files from Docker build context
+
+# Git and version control
+.git
+.gitignore
+.gitattributes
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Data directories (these are mounted as volumes)
+data/
+exports/
+charts/
+logs/
+backups/
+
+# Database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Chart images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# CSV exports
+*.csv
+
+# Log files
+*.log
+
+# Documentation (not needed in container)
+README*.md
+CHANGELOG.md
+LICENSE
+SETUP_GUIDE.md
+DEPLOYMENT_READY.md
+CLEANUP_COMPLETE.md
+
+# Test files
+test/
+tests/
+*_test.py
+test_*.py
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.pytest_cache/
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node modules (if any)
+node_modules/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Compressed archives
+*.tar.gz
+*.zip
+*.rar
+
+# Docker example files
+docker.env.example
+kraken.env.example

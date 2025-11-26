@@ -1,0 +1,17 @@
+# GridBot with PnL Tracking - Complete Requirements
+# Core dependencies
+aiohttp==3.9.1
+python-dotenv==1.0.0
+websockets==12.0
+
+# PnL tracking and analysis dependencies
+pandas>=1.5.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+numpy>=1.21.0
+
+# Database (built-in with Python)
+# sqlite3 is included with Python standard library
+
+# Additional utilities
+asyncio
