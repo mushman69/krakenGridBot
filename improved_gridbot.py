@@ -97,7 +97,10 @@ TRADING_PAIRS = {
         'cycle_pair': False,           #  Stable pair for balance
         'trend_sensitive': False,      #  Less trend sensitive
         'auto_rebalance': False,       #  Auto rebalance DISABLED for ETH/USD
-        'startup_rebalance': False     #  Startup rebalance DISABLED for ETH/USD
+        'startup_rebalance': False,    #  Startup rebalance DISABLED for ETH/USD
+        'dynamic_grid_reposition': True,  #  Enable dynamic grid repositioning
+        'grid_reposition_threshold': 5.0,  #  Reposition if price moves >5% outside grid center
+        'grid_reposition_cooldown': 300  #  Cooldown: 5 minutes between repositioning
     }
 }
 
@@ -560,6 +563,10 @@ class ImprovedGridBot:
         # Initialize PnL tracker
         self.pnl_tracker = PnLTracker()
         
+        # Track grid center prices and last reposition times for dynamic repositioning
+        self.grid_center_prices = {}  # Track where each grid is centered
+        self.last_reposition_time = {}  # Track when we last repositioned each pair
+        
         # Get enabled trading pairs
         self.enabled_pairs = {pair: config for pair, config in TRADING_PAIRS.items() 
                              if config.get('enabled', True)}
@@ -943,10 +950,92 @@ class ImprovedGridBot:
                         await asyncio.sleep(0.1)
             
             Logger.success(f"✅ Created {orders_placed} grid orders for {pair}")
+            
+            # Track grid center price for dynamic repositioning
+            self.grid_center_prices[pair] = current_price
+            
             return True
             
         except Exception as e:
             Logger.error(f"❌ Error creating grid orders for {pair}: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return False
+
+    async def check_grid_reposition_needed(self, pair, config):
+        """Check if grid needs to be repositioned based on price movement"""
+        try:
+            # Only check if dynamic repositioning is enabled
+            if not config.get('dynamic_grid_reposition', False):
+                return False
+            
+            if pair not in self.current_prices or pair not in self.grid_center_prices:
+                return False
+            
+            current_price = self.current_prices[pair]
+            grid_center = self.grid_center_prices[pair]
+            grid_interval = config.get('grid_interval', 1.5)
+            max_orders_per_side = config.get('max_orders_per_side', 18)
+            threshold = config.get('grid_reposition_threshold', 5.0)  # Default 5%
+            cooldown = config.get('grid_reposition_cooldown', 300)  # Default 5 minutes
+            
+            # Check cooldown period
+            if pair in self.last_reposition_time:
+                time_since_reposition = time.time() - self.last_reposition_time[pair]
+                if time_since_reposition < cooldown:
+                    return False
+            
+            # Calculate grid range (how far the grid extends from center)
+            grid_range_percent = (grid_interval / 100.0) * max_orders_per_side
+            
+            # Calculate how far current price is from grid center
+            price_deviation = abs((current_price - grid_center) / grid_center) * 100
+            
+            # Check if price is outside grid range by more than threshold
+            if price_deviation > (grid_range_percent + threshold):
+                Logger.warning(f"📊 {pair}: Price moved {price_deviation:.2f}% from grid center ({grid_center:.2f} -> {current_price:.2f})")
+                Logger.info(f"   Grid range: ±{grid_range_percent:.2f}%, Threshold: {threshold}%")
+                return True
+            
+            return False
+            
+        except Exception as e:
+            Logger.error(f"❌ Error checking grid reposition for {pair}: {str(e)}")
+            return False
+
+    async def reposition_grid(self, pair, config):
+        """Reposition grid around current price"""
+        try:
+            Logger.enhanced(f"🔄 Repositioning grid for {pair} around current price...")
+            
+            # Cancel all existing orders for this pair
+            kraken_pair = config.get('kraken_pair')
+            result = await self.api_call_with_retry('POST', '/0/private/CancelAll', {'pair': kraken_pair})
+            
+            if result:
+                canceled = result.get('count', 0)
+                Logger.info(f"   Canceled {canceled} existing orders")
+            
+            # Wait a moment for cancellations to process
+            await asyncio.sleep(1)
+            
+            # Refresh balances and prices
+            await self.get_account_balance()
+            await self.get_current_prices()
+            
+            # Create new grid around current price
+            success = await self.create_grid_orders(pair, config)
+            
+            if success:
+                self.last_reposition_time[pair] = time.time()
+                Logger.success(f"✅ Grid repositioned for {pair}")
+                return True
+            else:
+                Logger.error(f"❌ Failed to reposition grid for {pair}")
+                return False
+                
+        except Exception as e:
+            Logger.error(f"❌ Error repositioning grid for {pair}: {str(e)}")
             import traceback
             traceback.print_exc()
             return False
@@ -983,6 +1072,11 @@ class ImprovedGridBot:
             for pair, config in self.enabled_pairs.items():
                 if pair not in self.current_prices:
                     continue
+                
+                # First, check if grid needs repositioning (before checking individual orders)
+                if await self.check_grid_reposition_needed(pair, config):
+                    await self.reposition_grid(pair, config)
+                    continue  # Skip individual order replacement this cycle
                 
                 current_price = self.current_prices[pair]
                 max_orders_per_side = config.get('max_orders_per_side', 10)
