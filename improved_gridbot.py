@@ -206,36 +206,108 @@ class Logger:
     ENHANCED = '\033[95m'
     PNL = '\033[93m'      # Yellow for PnL reporting
     RESET = '\033[0m'    
+    _log_file = None
+    _log_dir = None
+    
+    @staticmethod
+    def init_file_logging(log_dir="logs"):
+        """Initialize file logging"""
+        try:
+            Logger._log_dir = log_dir
+            # Create log directory if it doesn't exist
+            if not os.path.exists(log_dir):
+                os.makedirs(log_dir, exist_ok=True)
+            
+            # Create log file with timestamp
+            log_filename = f"gridbot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+            log_path = os.path.join(log_dir, log_filename)
+            
+            # Also create a "latest.log" symlink/file for easy access
+            Logger._log_file = open(log_path, 'a', encoding='utf-8')
+            
+            # Write to latest.log as well (for Docker compatibility)
+            latest_log_path = os.path.join(log_dir, "latest.log")
+            try:
+                # Try to open in append mode
+                latest_file = open(latest_log_path, 'a', encoding='utf-8')
+                latest_file.close()
+            except:
+                pass
+            
+            Logger.info(f"📝 File logging enabled: {log_path}")
+            return True
+        except Exception as e:
+            print(f"⚠️ Failed to initialize file logging: {e}")
+            return False
+    
+    @staticmethod
+    def _write_to_file(level: str, msg: str):
+        """Write log message to file"""
+        if Logger._log_file:
+            try:
+                timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                # Remove ANSI color codes for file logging
+                clean_msg = msg
+                for code in [Logger.ERROR, Logger.WARNING, Logger.INFO, Logger.SUCCESS, Logger.ENHANCED, Logger.PNL, Logger.RESET]:
+                    clean_msg = clean_msg.replace(code, '')
+                
+                log_entry = f"[{timestamp}][{level}] {clean_msg}\n"
+                Logger._log_file.write(log_entry)
+                Logger._log_file.flush()  # Ensure it's written immediately
+                
+                # Also write to latest.log
+                if Logger._log_dir:
+                    latest_log_path = os.path.join(Logger._log_dir, "latest.log")
+                    try:
+                        with open(latest_log_path, 'a', encoding='utf-8') as f:
+                            f.write(log_entry)
+                    except:
+                        pass
+            except Exception as e:
+                # Don't fail if file logging fails
+                pass
     
     @staticmethod
     def error(msg: str):
         CURRENT_TIME = time.strftime('%H:%M:%S')
-        print(f"{Logger.ERROR}[{CURRENT_TIME}][ERROR] {msg}{Logger.RESET}")
+        formatted_msg = f"{Logger.ERROR}[{CURRENT_TIME}][ERROR] {msg}{Logger.RESET}"
+        print(formatted_msg)
+        Logger._write_to_file("ERROR", msg)
         
     @staticmethod
     def warning(msg: str):
         CURRENT_TIME = time.strftime('%H:%M:%S')
-        print(f"{Logger.WARNING}[{CURRENT_TIME}][WARNING] {msg}{Logger.RESET}")
+        formatted_msg = f"{Logger.WARNING}[{CURRENT_TIME}][WARNING] {msg}{Logger.RESET}"
+        print(formatted_msg)
+        Logger._write_to_file("WARNING", msg)
         
     @staticmethod
     def info(msg: str):
         CURRENT_TIME = time.strftime('%H:%M:%S')
-        print(f"{Logger.INFO}[{CURRENT_TIME}][INFO] {msg}{Logger.RESET}")
+        formatted_msg = f"{Logger.INFO}[{CURRENT_TIME}][INFO] {msg}{Logger.RESET}"
+        print(formatted_msg)
+        Logger._write_to_file("INFO", msg)
         
     @staticmethod
     def success(msg: str):
         CURRENT_TIME = time.strftime('%H:%M:%S')
-        print(f"{Logger.SUCCESS}[{CURRENT_TIME}][SUCCESS] {msg}{Logger.RESET}")
+        formatted_msg = f"{Logger.SUCCESS}[{CURRENT_TIME}][SUCCESS] {msg}{Logger.RESET}"
+        print(formatted_msg)
+        Logger._write_to_file("SUCCESS", msg)
         
     @staticmethod
     def enhanced(msg: str):
         CURRENT_TIME = time.strftime('%H:%M:%S')
-        print(f"{Logger.ENHANCED}[{CURRENT_TIME}][ENHANCED] {msg}{Logger.RESET}")
+        formatted_msg = f"{Logger.ENHANCED}[{CURRENT_TIME}][ENHANCED] {msg}{Logger.RESET}"
+        print(formatted_msg)
+        Logger._write_to_file("ENHANCED", msg)
         
     @staticmethod
     def pnl(msg: str):
         CURRENT_TIME = time.strftime('%H:%M:%S')
-        print(f"{Logger.PNL}[{CURRENT_TIME}][PNL] {msg}{Logger.RESET}")
+        formatted_msg = f"{Logger.PNL}[{CURRENT_TIME}][PNL] {msg}{Logger.RESET}"
+        print(formatted_msg)
+        Logger._write_to_file("PNL", msg)
 
 class PnLTracker:
     """SQLite-based PnL tracking system for the grid bot"""
@@ -567,6 +639,9 @@ class ImprovedGridBot:
         self.grid_center_prices = {}  # Track where each grid is centered
         self.last_reposition_time = {}  # Track when we last repositioned each pair
         
+        # Track expected order counts to detect filled orders
+        self.expected_order_counts = {}  # Track expected buy/sell counts per pair
+        
         # Get enabled trading pairs
         self.enabled_pairs = {pair: config for pair, config in TRADING_PAIRS.items() 
                              if config.get('enabled', True)}
@@ -775,12 +850,22 @@ class ImprovedGridBot:
             result = await self.api_call_with_retry('POST', '/0/private/AddOrder', data)
             
             if result is None:
-                Logger.error(f"❌ Failed to place {side} order for {pair}")
+                Logger.error(f"❌ Failed to place {side} order for {pair} - API call returned None")
+                Logger.error(f"   Details: pair={kraken_pair}, price={rounded_price}, volume={rounded_volume}")
+                return None
+            
+            # Check for API errors in result
+            if 'error' in result and result['error']:
+                error_msg = str(result['error'])
+                Logger.error(f"❌ API error placing {side} order for {pair}: {error_msg}")
+                Logger.error(f"   Details: pair={kraken_pair}, price={rounded_price}, volume={rounded_volume}")
                 return None
             
             txid_list = result.get('txid', [])
             if not txid_list:
                 Logger.error(f"❌ No transaction ID returned for {pair} {side} order")
+                Logger.error(f"   API response: {result}")
+                Logger.error(f"   Details: pair={kraken_pair}, price={rounded_price}, volume={rounded_volume}")
                 return None
             
             order_id = txid_list[0]
@@ -792,7 +877,10 @@ class ImprovedGridBot:
             return order_id
             
         except Exception as e:
-            Logger.error(f"❌ Error placing {side} order for {pair}: {str(e)}")
+            Logger.error(f"❌ Exception placing {side} order for {pair}: {str(e)}")
+            Logger.error(f"   Details: pair={pair}, side={side}, price={price}, volume={volume}")
+            import traceback
+            Logger.error(f"   Traceback: {traceback.format_exc()}")
             return None
 
     async def get_open_orders(self):
@@ -850,9 +938,11 @@ class ImprovedGridBot:
                     # Sell orders: need ETH, selling for USD
                     available_eth = quote_balance * 0.95  # Use 95% of ETH
                     if available_eth < 0.005:  # Minimum 0.005 ETH
+                        Logger.warning(f"⚠️ Insufficient ETH balance for sell order: {available_eth:.6f} < 0.005 (quote_balance: {quote_balance:.6f})")
                         return None
                     # Distribute ETH across sell orders
                     volume = available_eth / orders_count
+                    Logger.info(f"📊 Calculated sell volume for {pair}: {volume:.6f} ETH (from {available_eth:.6f} available, {orders_count} orders)")
             else:
                 # For XRP/BTC: base is XXBT, quote is XXRP
                 if side == 'buy':
@@ -866,8 +956,10 @@ class ImprovedGridBot:
                     # Sell orders: need XRP, selling for BTC
                     available_xrp = quote_balance * 0.95
                     if available_xrp < 10:  # Minimum XRP
+                        Logger.warning(f"⚠️ Insufficient XRP balance for sell order: {available_xrp:.2f} < 10 (quote_balance: {quote_balance:.2f})")
                         return None
                     volume = available_xrp / orders_count
+                    Logger.info(f"📊 Calculated sell volume for {pair}: {volume:.2f} XRP (from {available_xrp:.2f} available, {orders_count} orders)")
             
             return volume
             
@@ -954,6 +1046,12 @@ class ImprovedGridBot:
             # Track grid center price for dynamic repositioning
             self.grid_center_prices[pair] = current_price
             
+            # Track expected order counts
+            self.expected_order_counts[pair] = {
+                'buy': buy_orders_count if buy_orders_count > 0 else 0,
+                'sell': sell_orders_count if sell_orders_count > 0 else 0
+            }
+            
             return True
             
         except Exception as e:
@@ -1028,6 +1126,7 @@ class ImprovedGridBot:
             
             if success:
                 self.last_reposition_time[pair] = time.time()
+                # Expected counts will be updated by create_grid_orders
                 Logger.success(f"✅ Grid repositioned for {pair}")
                 return True
             else:
@@ -1068,6 +1167,16 @@ class ImprovedGridBot:
                     elif order_type == 'sell':
                         orders_by_pair[pair_name]['sell'] += 1
             
+            # Initialize expected counts from current orders if not set (handles bot restart)
+            for pair in self.enabled_pairs.keys():
+                if pair not in self.expected_order_counts:
+                    pair_orders = orders_by_pair.get(pair, {'buy': 0, 'sell': 0})
+                    self.expected_order_counts[pair] = {
+                        'buy': pair_orders['buy'],
+                        'sell': pair_orders['sell']
+                    }
+                    Logger.info(f"📊 {pair}: Initialized expected counts from current orders: {pair_orders['buy']} buy, {pair_orders['sell']} sell")
+            
             # Check each pair and replace missing orders
             for pair, config in self.enabled_pairs.items():
                 if pair not in self.current_prices:
@@ -1086,6 +1195,80 @@ class ImprovedGridBot:
                 buy_count = pair_orders['buy']
                 sell_count = pair_orders['sell']
                 
+                # Get expected counts (if we have them)
+                expected = self.expected_order_counts.get(pair, {'buy': 0, 'sell': 0})
+                expected_buy = expected.get('buy', 0)
+                expected_sell = expected.get('sell', 0)
+                
+                # Detect filled orders: if we have fewer orders than expected, orders were filled
+                # When a sell order fills, we should place a new buy order
+                # When a buy order fills, we should place a new sell order
+                
+                # Check if sell orders were filled (we have fewer than expected)
+                if sell_count < expected_sell:
+                    filled_sells = expected_sell - sell_count
+                    Logger.info(f"📊 {pair}: {filled_sells} sell order(s) filled! Placing {filled_sells} new buy order(s)...")
+                    
+                    # Refresh balances to get updated base currency from the sale
+                    # (USD for ETH/USD, BTC for XRP/BTC)
+                    await self.get_account_balance()
+                    
+                    # Place replacement buy orders for each filled sell order
+                    grid_interval = config.get('grid_interval', 1.5)
+                    orders_placed = 0
+                    for i in range(filled_sells):
+                        volume = self.calculate_order_volume(pair, 'buy', config, current_price, 1)
+                        if volume:
+                            # Place buy order at appropriate grid level below current price
+                            price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
+                            buy_price = current_price * (1 - price_offset)
+                            order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
+                            if order_id:
+                                orders_placed += 1
+                                await asyncio.sleep(0.2)  # Small delay between orders
+                    
+                    if orders_placed > 0:
+                        # Update expected counts after placing all replacement orders
+                        expected_buy = buy_count + orders_placed
+                        expected_sell = sell_count  # Update to actual count
+                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+                        Logger.success(f"✅ Placed {orders_placed} new buy order(s) after sell fill(s)")
+                    else:
+                        Logger.warning(f"⚠️ Failed to place replacement buy orders for {pair}")
+                
+                # Check if buy orders were filled (we have fewer than expected)
+                if buy_count < expected_buy:
+                    filled_buys = expected_buy - buy_count
+                    Logger.info(f"📊 {pair}: {filled_buys} buy order(s) filled! Placing {filled_buys} new sell order(s)...")
+                    
+                    # Refresh balances to get updated quote currency from the purchase
+                    # (ETH for ETH/USD, XRP for XRP/BTC)
+                    await self.get_account_balance()
+                    
+                    # Place replacement sell orders for each filled buy order
+                    grid_interval = config.get('grid_interval', 1.5)
+                    orders_placed = 0
+                    for i in range(filled_buys):
+                        volume = self.calculate_order_volume(pair, 'sell', config, current_price, 1)
+                        if volume:
+                            # Place sell order at appropriate grid level above current price
+                            price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
+                            sell_price = current_price * (1 + price_offset)
+                            order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
+                            if order_id:
+                                orders_placed += 1
+                                await asyncio.sleep(0.2)  # Small delay between orders
+                    
+                    if orders_placed > 0:
+                        # Update expected counts after placing all replacement orders
+                        expected_sell = sell_count + orders_placed
+                        expected_buy = buy_count  # Update to actual count
+                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+                        Logger.success(f"✅ Placed {orders_placed} new sell order(s) after buy fill(s)")
+                    else:
+                        Logger.warning(f"⚠️ Failed to place replacement sell orders for {pair}")
+                
+                # Also check if we need to add orders to maintain minimum grid
                 # Check if we need to add buy orders
                 if buy_count < min_orders_per_side:
                     needed = min_orders_per_side - buy_count
@@ -1093,14 +1276,22 @@ class ImprovedGridBot:
                     
                     volume = self.calculate_order_volume(pair, 'buy', config, current_price, needed)
                     if volume:
+                        orders_placed = 0
                         for i in range(needed):
                             # Find a price below current that doesn't have an order
                             grid_interval = config.get('grid_interval', 1.5)
                             price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
                             buy_price = current_price * (1 - price_offset)
                             
-                            await self.place_limit_order(pair, 'buy', volume, buy_price, config)
+                            order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
+                            if order_id:
+                                orders_placed += 1
                             await asyncio.sleep(0.1)
+                        
+                        if orders_placed > 0:
+                            # Update expected counts
+                            expected_buy = buy_count + orders_placed
+                            self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
                     else:
                         Logger.warning(f"⚠️ Cannot calculate buy order volume for {pair}")
                 elif buy_count < max_orders_per_side:
@@ -1117,12 +1308,19 @@ class ImprovedGridBot:
                                 Logger.info(f"📊 {pair}: Can add {can_add} more buy orders (current: {buy_count}, max: {max_orders_per_side})")
                                 volume = self.calculate_order_volume(pair, 'buy', config, current_price, can_add)
                                 if volume:
+                                    orders_placed = 0
                                     for i in range(can_add):
                                         grid_interval = config.get('grid_interval', 1.5)
                                         price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
                                         buy_price = current_price * (1 - price_offset)
-                                        await self.place_limit_order(pair, 'buy', volume, buy_price, config)
+                                        order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
+                                        if order_id:
+                                            orders_placed += 1
                                         await asyncio.sleep(0.1)
+                                    
+                                    if orders_placed > 0:
+                                        expected_buy = buy_count + orders_placed
+                                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
                     else:  # XRP/BTC
                         if base_balance > 0.0001 * (max_orders_per_side - buy_count):
                             can_add = min(max_orders_per_side - buy_count, int(base_balance / 0.0001))
@@ -1130,12 +1328,19 @@ class ImprovedGridBot:
                                 Logger.info(f"📊 {pair}: Can add {can_add} more buy orders (current: {buy_count}, max: {max_orders_per_side})")
                                 volume = self.calculate_order_volume(pair, 'buy', config, current_price, can_add)
                                 if volume:
+                                    orders_placed = 0
                                     for i in range(can_add):
                                         grid_interval = config.get('grid_interval', 1.5)
                                         price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
                                         buy_price = current_price * (1 - price_offset)
-                                        await self.place_limit_order(pair, 'buy', volume, buy_price, config)
+                                        order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
+                                        if order_id:
+                                            orders_placed += 1
                                         await asyncio.sleep(0.1)
+                                    
+                                    if orders_placed > 0:
+                                        expected_buy = buy_count + orders_placed
+                                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
                 
                 # Check if we need to add sell orders
                 if sell_count < min_orders_per_side:
@@ -1144,14 +1349,22 @@ class ImprovedGridBot:
                     
                     volume = self.calculate_order_volume(pair, 'sell', config, current_price, needed)
                     if volume:
+                        orders_placed = 0
                         for i in range(needed):
                             # Find a price above current that doesn't have an order
                             grid_interval = config.get('grid_interval', 1.5)
                             price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
                             sell_price = current_price * (1 + price_offset)
                             
-                            await self.place_limit_order(pair, 'sell', volume, sell_price, config)
+                            order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
+                            if order_id:
+                                orders_placed += 1
                             await asyncio.sleep(0.1)
+                        
+                        if orders_placed > 0:
+                            # Update expected counts
+                            expected_sell = sell_count + orders_placed
+                            self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
                     else:
                         Logger.warning(f"⚠️ Cannot calculate sell order volume for {pair}")
                 elif sell_count < max_orders_per_side:
@@ -1167,12 +1380,19 @@ class ImprovedGridBot:
                                 Logger.info(f"📊 {pair}: Can add {can_add} more sell orders (current: {sell_count}, max: {max_orders_per_side})")
                                 volume = self.calculate_order_volume(pair, 'sell', config, current_price, can_add)
                                 if volume:
+                                    orders_placed = 0
                                     for i in range(can_add):
                                         grid_interval = config.get('grid_interval', 1.5)
                                         price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
                                         sell_price = current_price * (1 + price_offset)
-                                        await self.place_limit_order(pair, 'sell', volume, sell_price, config)
+                                        order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
+                                        if order_id:
+                                            orders_placed += 1
                                         await asyncio.sleep(0.1)
+                                    
+                                    if orders_placed > 0:
+                                        expected_sell = sell_count + orders_placed
+                                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
                     else:  # XRP/BTC
                         if quote_balance > 10 * (max_orders_per_side - sell_count):
                             can_add = min(max_orders_per_side - sell_count, int(quote_balance / 10))
@@ -1180,12 +1400,19 @@ class ImprovedGridBot:
                                 Logger.info(f"📊 {pair}: Can add {can_add} more sell orders (current: {sell_count}, max: {max_orders_per_side})")
                                 volume = self.calculate_order_volume(pair, 'sell', config, current_price, can_add)
                                 if volume:
+                                    orders_placed = 0
                                     for i in range(can_add):
                                         grid_interval = config.get('grid_interval', 1.5)
                                         price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
                                         sell_price = current_price * (1 + price_offset)
-                                        await self.place_limit_order(pair, 'sell', volume, sell_price, config)
+                                        order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
+                                        if order_id:
+                                            orders_placed += 1
                                         await asyncio.sleep(0.1)
+                                    
+                                    if orders_placed > 0:
+                                        expected_sell = sell_count + orders_placed
+                                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
             
             return True
             
@@ -1256,6 +1483,10 @@ class ImprovedGridBot:
 async def main():
     """Main entry point"""
     try:
+        # Initialize file logging
+        log_dir = os.getenv('LOG_DIR', 'logs')
+        Logger.init_file_logging(log_dir)
+        
         # Check time synchronization
         Logger.enhanced("🕐 Checking container time synchronization...")
         container_time = datetime.now()
