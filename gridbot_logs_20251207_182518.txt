@@ -1,0 +1,1001 @@
+GridBot Logs Export
+Container: kraken_gridbot_pnl
+Exported: 2025-12-07 18:25:18
+================================================================================
+
+[INFO] ✅ Loaded environment from: kraken.env
+[96m[18:23:20][INFO] 📝 File logging enabled: logs/gridbot_20251207_182320.log[0m
+[95m[18:23:20][ENHANCED] 🕐 Checking container time synchronization...[0m
+[96m[18:23:20][INFO] 📅 Container time: Sun Dec 07 18:23:20 UTC 2025[0m
+[96m[18:23:20][INFO] 🌍 UTC time: Sun Dec 07 18:23:20 UTC 2025[0m
+[95m[18:23:20][ENHANCED] ⏳ Adding 11s startup delay to prevent nonce conflicts...[0m
+[92m[18:23:31][SUCCESS] ✅ API credentials configured[0m
+[92m[18:23:31][SUCCESS] ✅ PnL database initialized successfully[0m
+[95m[18:23:31][ENHANCED] 🚀 ENHANCED MULTI-PAIR GRIDBOT WITH PnL TRACKING 🚀[0m
+[96m[18:23:31][INFO] 📈 Trading pairs enabled: 2[0m
+[96m[18:23:31][INFO]   XRP/BTC: 2.5% spacing, 60.0% allocation[0m
+[96m[18:23:31][INFO]   ETH/USD: 1.5% spacing, 40.0% allocation[0m
+[96m[18:23:31][INFO] 📊 PnL Tracking: ENABLED (reporting every 5 minutes)[0m
+[95m[18:23:31][ENHANCED] 🎯 STARTING GRIDBOT TRADING SESSION[0m
+[96m[18:23:31][INFO] 💰 Fetching current balances...[0m
+[96m[18:23:31][INFO]   DOT: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:31][INFO]   DOT.S: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:31][INFO]   DOT28.S: 45.313531 total, 45.313531 available (no locked funds)[0m
+[96m[18:23:31][INFO]   SOL: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:31][INFO]   USDT: -0.000000 total, -0.000000 available (no locked funds)[0m
+[96m[18:23:31][INFO]   XETH: 0.043823 total, 0.040616 locked, 0.003207 available[0m
+[96m[18:23:31][INFO]   XXBT: 0.000609 total, 0.000609 available (no locked funds)[0m
+[96m[18:23:31][INFO]   XXLM: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:31][INFO]   XXRP: 105.945477 total, 105.945477 available (no locked funds)[0m
+[96m[18:23:31][INFO]   ZCAD: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:31][INFO]   ZUSD: 68.804600 total, 68.804600 available (no locked funds)[0m
+[96m[18:23:31][INFO] ✅ Available balances calculated: 11 assets[0m
+[96m[18:23:31][INFO]    XETH: 0.003207 available (of 0.043823 total)[0m
+[96m[18:23:31][INFO] 📈 Fetching current prices...[0m
+[96m[18:23:31][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[18:23:31][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[18:23:31][INFO] 📊 Received ticker data for 3 pairs: ['XETHZUSD', 'XXBTZUSD', 'XXRPXXBT'][0m
+[92m[18:23:31][SUCCESS] ✅ ETH/USD: 3128.7400000[0m
+[92m[18:23:31][SUCCESS] ✅ BTC/USD: 91460.40 (for XRP/BTC order value conversion)[0m
+[92m[18:23:31][SUCCESS] ✅ XRP/BTC: 0.0000231[0m
+[96m[18:23:31][INFO] ✅ BTC/USD price successfully fetched: $91460.40 (will be used for XRP/BTC order value conversion)[0m
+[92m[18:23:31][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[95m[18:23:31][ENHANCED] 🧹 CANCELING ALL EXISTING ORDERS...[0m
+[92m[18:23:31][SUCCESS] ✅ Canceled 16 existing orders[0m
+[95m[18:23:31][ENHANCED] 📊 Creating initial grid orders...[0m
+[95m[18:23:31][ENHANCED] 📊 Creating grid for XRP/BTC at price 0.000023[0m
+[96m[18:23:31][INFO] 🔍 XRP/BTC buy: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:23:31][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002247 BTC = 0.00009392 BTC × $91460.40/BTC = $8.59 USD[0m
+[93m[18:23:31][WARNING] ⚠️ Order value too small for XRP/BTC: $8.59 < $10.00 (BTC value: 0.00009392 BTC @ $91460.40/BTC)[0m
+[93m[18:23:31][WARNING]    Volume: 4.18 XRP, Price: 0.00002247 BTC/XRP[0m
+[96m[18:23:32][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002190 BTC = 0.00009154 BTC × $91460.40/BTC = $8.37 USD[0m
+[93m[18:23:32][WARNING] ⚠️ Order value too small for XRP/BTC: $8.37 < $10.00 (BTC value: 0.00009154 BTC @ $91460.40/BTC)[0m
+[93m[18:23:32][WARNING]    Volume: 4.18 XRP, Price: 0.00002190 BTC/XRP[0m
+[96m[18:23:32][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002132 BTC = 0.00008912 BTC × $91460.40/BTC = $8.15 USD[0m
+[93m[18:23:32][WARNING] ⚠️ Order value too small for XRP/BTC: $8.15 < $10.00 (BTC value: 0.00008912 BTC @ $91460.40/BTC)[0m
+[93m[18:23:32][WARNING]    Volume: 4.18 XRP, Price: 0.00002132 BTC/XRP[0m
+[96m[18:23:32][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002075 BTC = 0.00008673 BTC × $91460.40/BTC = $7.93 USD[0m
+[93m[18:23:32][WARNING] ⚠️ Order value too small for XRP/BTC: $7.93 < $10.00 (BTC value: 0.00008673 BTC @ $91460.40/BTC)[0m
+[93m[18:23:32][WARNING]    Volume: 4.18 XRP, Price: 0.00002075 BTC/XRP[0m
+[96m[18:23:32][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002017 BTC = 0.00008431 BTC × $91460.40/BTC = $7.71 USD[0m
+[93m[18:23:32][WARNING] ⚠️ Order value too small for XRP/BTC: $7.71 < $10.00 (BTC value: 0.00008431 BTC @ $91460.40/BTC)[0m
+[93m[18:23:32][WARNING]    Volume: 4.18 XRP, Price: 0.00002017 BTC/XRP[0m
+[96m[18:23:32][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00001959 BTC = 0.00008189 BTC × $91460.40/BTC = $7.49 USD[0m
+[93m[18:23:32][WARNING] ⚠️ Order value too small for XRP/BTC: $7.49 < $10.00 (BTC value: 0.00008189 BTC @ $91460.40/BTC)[0m
+[93m[18:23:32][WARNING]    Volume: 4.18 XRP, Price: 0.00001959 BTC/XRP[0m
+[96m[18:23:32][INFO] 🔍 XRP/BTC sell: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:23:32][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[96m[18:23:32][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002363 BTC = 0.00023772 BTC × $91460.40/BTC = $21.74 USD[0m
+[96m[18:23:32][INFO] ✅ Order value for XRP/BTC: $21.74 USD (BTC: 0.00023772 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:32][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002363 (ID: OSZYTN-RWAHI-M7KVON)[0m
+[96m[18:23:32][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000024[0m
+[96m[18:23:32][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002420 BTC = 0.00024345 BTC × $91460.40/BTC = $22.27 USD[0m
+[96m[18:23:32][INFO] ✅ Order value for XRP/BTC: $22.27 USD (BTC: 0.00024345 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:32][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002420 (ID: OLRZTO-GYRK4-SP6YUA)[0m
+[96m[18:23:32][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000024[0m
+[96m[18:23:32][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002478 BTC = 0.00024929 BTC × $91460.40/BTC = $22.80 USD[0m
+[96m[18:23:32][INFO] ✅ Order value for XRP/BTC: $22.80 USD (BTC: 0.00024929 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:33][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002478 (ID: OYOLEI-YAMQ3-VNBBEN)[0m
+[96m[18:23:33][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000025[0m
+[96m[18:23:33][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002536 BTC = 0.00025512 BTC × $91460.40/BTC = $23.33 USD[0m
+[96m[18:23:33][INFO] ✅ Order value for XRP/BTC: $23.33 USD (BTC: 0.00025512 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:33][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002536 (ID: OHZ37L-QKGJ6-4KU4U7)[0m
+[96m[18:23:33][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000025[0m
+[96m[18:23:33][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002593 BTC = 0.00026086 BTC × $91460.40/BTC = $23.86 USD[0m
+[96m[18:23:33][INFO] ✅ Order value for XRP/BTC: $23.86 USD (BTC: 0.00026086 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:33][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002593 (ID: ONEMN7-AEPKA-DGBV5Y)[0m
+[96m[18:23:33][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000026[0m
+[96m[18:23:33][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002651 BTC = 0.00026669 BTC × $91460.40/BTC = $24.39 USD[0m
+[96m[18:23:33][INFO] ✅ Order value for XRP/BTC: $24.39 USD (BTC: 0.00026669 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:33][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002651 (ID: OPUZGU-VYYPN-P5F2MS)[0m
+[96m[18:23:33][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000027[0m
+[96m[18:23:33][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002708 BTC = 0.00027242 BTC × $91460.40/BTC = $24.92 USD[0m
+[96m[18:23:33][INFO] ✅ Order value for XRP/BTC: $24.92 USD (BTC: 0.00027242 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:33][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002708 (ID: OQGX6E-SZFKQ-W62M6F)[0m
+[96m[18:23:33][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000027[0m
+[96m[18:23:34][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002766 BTC = 0.00027826 BTC × $91460.40/BTC = $25.45 USD[0m
+[96m[18:23:34][INFO] ✅ Order value for XRP/BTC: $25.45 USD (BTC: 0.00027826 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:34][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002766 (ID: OZSBAQ-ZDL6V-MWTK3R)[0m
+[96m[18:23:34][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000028[0m
+[96m[18:23:34][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002824 BTC = 0.00028409 BTC × $91460.40/BTC = $25.98 USD[0m
+[96m[18:23:34][INFO] ✅ Order value for XRP/BTC: $25.98 USD (BTC: 0.00028409 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:34][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002824 (ID: OPXMBD-NKXDW-USW37G)[0m
+[96m[18:23:34][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000028[0m
+[96m[18:23:34][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002881 BTC = 0.00028983 BTC × $91460.40/BTC = $26.51 USD[0m
+[96m[18:23:34][INFO] ✅ Order value for XRP/BTC: $26.51 USD (BTC: 0.00028983 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:34][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002881 (ID: O77SBE-BW5OE-J6PFLF)[0m
+[96m[18:23:34][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000029[0m
+[92m[18:23:34][SUCCESS] ✅ Created 10 grid orders for XRP/BTC[0m
+[91m[18:23:34][ERROR] 🔴 XRP/BTC: ✅✅✅ FORCED expected counts update: 0 buy, 10 sell (intended was: 6 buy, 10 sell) ✅✅✅[0m
+[93m[18:23:34][WARNING] ⚠️ XRP/BTC: Expected counts verification - buy_orders_placed=0, sell_orders_placed=10, stored={'buy': 0, 'sell': 10}[0m
+[95m[18:23:35][ENHANCED] 📊 Creating grid for ETH/USD at price 3128.740000[0m
+[96m[18:23:35][INFO] 📊 ETH/USD: Using available balances - USD: 68.80, ETH: 0.003207 (locked funds already subtracted)[0m
+[96m[18:23:35][INFO] 🔍 ETH/USD buy: Using AVAILABLE balances - ZUSD: 68.804600 (total: 68.804600), XETH: 0.003207 (total: 0.043823)[0m
+[92m[18:23:35][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005223 @ 3081.81 (ID: OC2XHQ-NZWIB-Y6DSUE)[0m
+[96m[18:23:35][INFO] 📝 Order recorded: ETH/USD BUY 0.005223 @ 3081.810000[0m
+[92m[18:23:36][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005223 @ 3034.88 (ID: ODEU2A-XUYHQ-W5MHRL)[0m
+[96m[18:23:36][INFO] 📝 Order recorded: ETH/USD BUY 0.005223 @ 3034.880000[0m
+[92m[18:23:36][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005223 @ 2987.95 (ID: OKIG4B-RQE4Z-YYZMP2)[0m
+[96m[18:23:36][INFO] 📝 Order recorded: ETH/USD BUY 0.005223 @ 2987.950000[0m
+[92m[18:23:36][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005223 @ 2941.02 (ID: OJKJEJ-QR3CM-62233M)[0m
+[96m[18:23:36][INFO] 📝 Order recorded: ETH/USD BUY 0.005223 @ 2941.020000[0m
+[INFO] ✅ Loaded environment from: kraken.env
+[96m[18:23:37][INFO] 📝 File logging enabled: logs/gridbot_20251207_182337.log[0m
+[95m[18:23:37][ENHANCED] 🕐 Checking container time synchronization...[0m
+[96m[18:23:37][INFO] 📅 Container time: Sun Dec 07 18:23:37 UTC 2025[0m
+[96m[18:23:37][INFO] 🌍 UTC time: Sun Dec 07 18:23:37 UTC 2025[0m
+[95m[18:23:37][ENHANCED] ⏳ Adding 5s startup delay to prevent nonce conflicts...[0m
+[92m[18:23:42][SUCCESS] ✅ API credentials configured[0m
+[92m[18:23:42][SUCCESS] ✅ PnL database initialized successfully[0m
+[95m[18:23:42][ENHANCED] 🚀 ENHANCED MULTI-PAIR GRIDBOT WITH PnL TRACKING 🚀[0m
+[96m[18:23:42][INFO] 📈 Trading pairs enabled: 2[0m
+[96m[18:23:42][INFO]   XRP/BTC: 2.5% spacing, 60.0% allocation[0m
+[96m[18:23:42][INFO]   ETH/USD: 1.5% spacing, 40.0% allocation[0m
+[96m[18:23:42][INFO] 📊 PnL Tracking: ENABLED (reporting every 5 minutes)[0m
+[95m[18:23:42][ENHANCED] 🎯 STARTING GRIDBOT TRADING SESSION[0m
+[96m[18:23:42][INFO] 💰 Fetching current balances...[0m
+[96m[18:23:42][INFO]   DOT: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:42][INFO]   DOT.S: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:42][INFO]   DOT28.S: 45.313531 total, 45.313531 available (no locked funds)[0m
+[96m[18:23:42][INFO]   SOL: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:42][INFO]   USDT: -0.000000 total, -0.000000 available (no locked funds)[0m
+[96m[18:23:42][INFO]   XETH: 0.043823 total, 0.043823 available (no locked funds)[0m
+[96m[18:23:42][INFO]   XXBT: 0.000609 total, 0.000609 available (no locked funds)[0m
+[96m[18:23:42][INFO]   XXLM: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:42][INFO]   XXRP: 105.945477 total, 105.945477 available (no locked funds)[0m
+[96m[18:23:42][INFO]   ZCAD: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:42][INFO]   ZUSD: 68.804600 total, 62.914482 locked, 5.890118 available[0m
+[96m[18:23:42][INFO] ✅ Available balances calculated: 11 assets[0m
+[96m[18:23:42][INFO]    ZUSD: 5.890118 available (of 68.804600 total)[0m
+[96m[18:23:42][INFO] 📈 Fetching current prices...[0m
+[96m[18:23:42][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[18:23:42][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[18:23:42][INFO] 📊 Received ticker data for 3 pairs: ['XETHZUSD', 'XXBTZUSD', 'XXRPXXBT'][0m
+[92m[18:23:42][SUCCESS] ✅ ETH/USD: 3132.4000000[0m
+[92m[18:23:42][SUCCESS] ✅ BTC/USD: 91460.40 (for XRP/BTC order value conversion)[0m
+[92m[18:23:42][SUCCESS] ✅ XRP/BTC: 0.0000231[0m
+[96m[18:23:42][INFO] ✅ BTC/USD price successfully fetched: $91460.40 (will be used for XRP/BTC order value conversion)[0m
+[92m[18:23:42][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[95m[18:23:42][ENHANCED] 🧹 CANCELING ALL EXISTING ORDERS...[0m
+[92m[18:23:42][SUCCESS] ✅ Canceled 14 existing orders[0m
+[95m[18:23:42][ENHANCED] 📊 Creating initial grid orders...[0m
+[95m[18:23:42][ENHANCED] 📊 Creating grid for XRP/BTC at price 0.000023[0m
+[96m[18:23:42][INFO] 🔍 XRP/BTC buy: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:23:42][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002247 BTC = 0.00009392 BTC × $91460.40/BTC = $8.59 USD[0m
+[93m[18:23:42][WARNING] ⚠️ Order value too small for XRP/BTC: $8.59 < $10.00 (BTC value: 0.00009392 BTC @ $91460.40/BTC)[0m
+[93m[18:23:42][WARNING]    Volume: 4.18 XRP, Price: 0.00002247 BTC/XRP[0m
+[96m[18:23:42][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002190 BTC = 0.00009154 BTC × $91460.40/BTC = $8.37 USD[0m
+[93m[18:23:42][WARNING] ⚠️ Order value too small for XRP/BTC: $8.37 < $10.00 (BTC value: 0.00009154 BTC @ $91460.40/BTC)[0m
+[93m[18:23:42][WARNING]    Volume: 4.18 XRP, Price: 0.00002190 BTC/XRP[0m
+[96m[18:23:43][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002132 BTC = 0.00008912 BTC × $91460.40/BTC = $8.15 USD[0m
+[93m[18:23:43][WARNING] ⚠️ Order value too small for XRP/BTC: $8.15 < $10.00 (BTC value: 0.00008912 BTC @ $91460.40/BTC)[0m
+[93m[18:23:43][WARNING]    Volume: 4.18 XRP, Price: 0.00002132 BTC/XRP[0m
+[96m[18:23:43][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002075 BTC = 0.00008673 BTC × $91460.40/BTC = $7.93 USD[0m
+[93m[18:23:43][WARNING] ⚠️ Order value too small for XRP/BTC: $7.93 < $10.00 (BTC value: 0.00008673 BTC @ $91460.40/BTC)[0m
+[93m[18:23:43][WARNING]    Volume: 4.18 XRP, Price: 0.00002075 BTC/XRP[0m
+[96m[18:23:43][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00002017 BTC = 0.00008431 BTC × $91460.40/BTC = $7.71 USD[0m
+[93m[18:23:43][WARNING] ⚠️ Order value too small for XRP/BTC: $7.71 < $10.00 (BTC value: 0.00008431 BTC @ $91460.40/BTC)[0m
+[93m[18:23:43][WARNING]    Volume: 4.18 XRP, Price: 0.00002017 BTC/XRP[0m
+[96m[18:23:43][INFO] 🔍 XRP/BTC order value calculation: 4.18 XRP × 0.00001959 BTC = 0.00008189 BTC × $91460.40/BTC = $7.49 USD[0m
+[93m[18:23:43][WARNING] ⚠️ Order value too small for XRP/BTC: $7.49 < $10.00 (BTC value: 0.00008189 BTC @ $91460.40/BTC)[0m
+[93m[18:23:43][WARNING]    Volume: 4.18 XRP, Price: 0.00001959 BTC/XRP[0m
+[96m[18:23:43][INFO] 🔍 XRP/BTC sell: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:23:43][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[96m[18:23:43][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002363 BTC = 0.00023772 BTC × $91460.40/BTC = $21.74 USD[0m
+[96m[18:23:43][INFO] ✅ Order value for XRP/BTC: $21.74 USD (BTC: 0.00023772 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:43][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002363 (ID: OIILQF-FSZXS-AORYXX)[0m
+[96m[18:23:43][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000024[0m
+[96m[18:23:43][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002420 BTC = 0.00024345 BTC × $91460.40/BTC = $22.27 USD[0m
+[96m[18:23:43][INFO] ✅ Order value for XRP/BTC: $22.27 USD (BTC: 0.00024345 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:43][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002420 (ID: OKQ4TN-SKX7L-QYL43H)[0m
+[96m[18:23:43][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000024[0m
+[96m[18:23:44][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002478 BTC = 0.00024929 BTC × $91460.40/BTC = $22.80 USD[0m
+[96m[18:23:44][INFO] ✅ Order value for XRP/BTC: $22.80 USD (BTC: 0.00024929 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:44][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002478 (ID: OFKAHX-PWS6U-MJQ32V)[0m
+[96m[18:23:44][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000025[0m
+[96m[18:23:44][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002536 BTC = 0.00025512 BTC × $91460.40/BTC = $23.33 USD[0m
+[96m[18:23:44][INFO] ✅ Order value for XRP/BTC: $23.33 USD (BTC: 0.00025512 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:44][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002536 (ID: OJRD6H-NYPRW-Y6CYZN)[0m
+[96m[18:23:44][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000025[0m
+[96m[18:23:44][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002593 BTC = 0.00026086 BTC × $91460.40/BTC = $23.86 USD[0m
+[96m[18:23:44][INFO] ✅ Order value for XRP/BTC: $23.86 USD (BTC: 0.00026086 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:44][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002593 (ID: OV6SRE-BKK7V-ITBVDB)[0m
+[96m[18:23:44][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000026[0m
+[96m[18:23:44][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002651 BTC = 0.00026669 BTC × $91460.40/BTC = $24.39 USD[0m
+[96m[18:23:44][INFO] ✅ Order value for XRP/BTC: $24.39 USD (BTC: 0.00026669 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:44][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002651 (ID: OJVB6C-D54CK-3OU7Z3)[0m
+[96m[18:23:44][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000027[0m
+[96m[18:23:45][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002708 BTC = 0.00027242 BTC × $91460.40/BTC = $24.92 USD[0m
+[96m[18:23:45][INFO] ✅ Order value for XRP/BTC: $24.92 USD (BTC: 0.00027242 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:45][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002708 (ID: OBO5SO-OU4OL-QHJKIA)[0m
+[96m[18:23:45][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000027[0m
+[96m[18:23:45][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002766 BTC = 0.00027826 BTC × $91460.40/BTC = $25.45 USD[0m
+[96m[18:23:45][INFO] ✅ Order value for XRP/BTC: $25.45 USD (BTC: 0.00027826 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:45][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002766 (ID: OJ7LER-LGGQR-ADG7XD)[0m
+[96m[18:23:45][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000028[0m
+[96m[18:23:45][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002824 BTC = 0.00028409 BTC × $91460.40/BTC = $25.98 USD[0m
+[96m[18:23:45][INFO] ✅ Order value for XRP/BTC: $25.98 USD (BTC: 0.00028409 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:45][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002824 (ID: OFWVWX-6NPMS-UDKNI5)[0m
+[96m[18:23:45][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000028[0m
+[96m[18:23:45][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002881 BTC = 0.00028983 BTC × $91460.40/BTC = $26.51 USD[0m
+[96m[18:23:45][INFO] ✅ Order value for XRP/BTC: $26.51 USD (BTC: 0.00028983 @ $91460.40/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:45][SUCCESS] ✅ Placed SELL order for XRP/BTC: 10.06 @ 0.00002881 (ID: O53WCZ-VWNLJ-ICEMAK)[0m
+[96m[18:23:45][INFO] 📝 Order recorded: XRP/BTC SELL 10.060000 @ 0.000029[0m
+[92m[18:23:46][SUCCESS] ✅ Created 10 grid orders for XRP/BTC[0m
+[91m[18:23:46][ERROR] 🔴 XRP/BTC: ✅✅✅ FORCED expected counts update: 0 buy, 10 sell (intended was: 6 buy, 10 sell) ✅✅✅[0m
+[93m[18:23:46][WARNING] ⚠️ XRP/BTC: Expected counts verification - buy_orders_placed=0, sell_orders_placed=10, stored={'buy': 0, 'sell': 10}[0m
+[95m[18:23:47][ENHANCED] 📊 Creating grid for ETH/USD at price 3132.400000[0m
+[96m[18:23:47][INFO] 📊 ETH/USD: Using available balances - USD: 5.89, ETH: 0.043823 (locked funds already subtracted)[0m
+[96m[18:23:47][INFO] 🔍 ETH/USD buy: Using AVAILABLE balances - ZUSD: 5.890118 (total: 68.804600), XETH: 0.043823 (total: 0.043823)[0m
+[93m[18:23:47][WARNING] ⚠️ Cannot calculate buy order volume for ETH/USD[0m
+[96m[18:23:47][INFO] 🔍 ETH/USD sell: Using AVAILABLE balances - ZUSD: 5.890118 (total: 68.804600), XETH: 0.043823 (total: 0.043823)[0m
+[96m[18:23:47][INFO] 📊 Calculated sell volume for ETH/USD: 0.005204 ETH (from 0.041632 available after 95%, 0.043823 total available, 0.043823 total ETH, 8 orders)[0m
+[92m[18:23:47][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005204 @ 3179.39 (ID: OJ3W6P-7ZPQF-SD5UE4)[0m
+[96m[18:23:47][INFO] 📝 Order recorded: ETH/USD SELL 0.005204 @ 3179.390000[0m
+[92m[18:23:47][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005204 @ 3226.37 (ID: OL6D2A-JRH6S-YQ6PAF)[0m
+[96m[18:23:47][INFO] 📝 Order recorded: ETH/USD SELL 0.005204 @ 3226.370000[0m
+[92m[18:23:47][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005204 @ 3273.36 (ID: OIWGJ4-2A77X-BPUJZK)[0m
+[96m[18:23:47][INFO] 📝 Order recorded: ETH/USD SELL 0.005204 @ 3273.360000[0m
+[92m[18:23:47][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005204 @ 3320.34 (ID: OOC62Y-DKO2K-4MPPOZ)[0m
+[96m[18:23:47][INFO] 📝 Order recorded: ETH/USD SELL 0.005204 @ 3320.340000[0m
+[92m[18:23:48][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005204 @ 3367.33 (ID: OJVB5Q-VNYQT-62O2IA)[0m
+[96m[18:23:48][INFO] 📝 Order recorded: ETH/USD SELL 0.005204 @ 3367.330000[0m
+[92m[18:23:48][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005204 @ 3414.32 (ID: ONUL6W-2YOBQ-6KR3CN)[0m
+[96m[18:23:48][INFO] 📝 Order recorded: ETH/USD SELL 0.005204 @ 3414.320000[0m
+[92m[18:23:48][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005204 @ 3461.30 (ID: OJC2UD-A3OZH-BRPB4O)[0m
+[96m[18:23:48][INFO] 📝 Order recorded: ETH/USD SELL 0.005204 @ 3461.300000[0m
+[92m[18:23:49][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005204 @ 3508.29 (ID: OS5OW5-ZNALZ-SMCHKH)[0m
+[96m[18:23:49][INFO] 📝 Order recorded: ETH/USD SELL 0.005204 @ 3508.290000[0m
+[92m[18:23:49][SUCCESS] ✅ Created 8 grid orders for ETH/USD[0m
+[91m[18:23:49][ERROR] 🔴 ETH/USD: ✅✅✅ FORCED expected counts update: 0 buy, 8 sell (intended was: 3 buy, 8 sell) ✅✅✅[0m
+[93m[18:23:49][WARNING] ⚠️ ETH/USD: Expected counts verification - buy_orders_placed=0, sell_orders_placed=8, stored={'buy': 0, 'sell': 8}[0m
+[92m[18:23:50][SUCCESS] 🎉 GridBot initialized successfully![0m
+[96m[18:23:50][INFO] 📊 PnL tracking active - check logs for execution reports[0m
+[96m[18:23:50][INFO] ⏱️ Monitoring orders every 10 seconds[0m
+[96m[18:23:50][INFO] 💰 Fetching current balances...[0m
+[96m[18:23:50][INFO]   DOT: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:50][INFO]   DOT.S: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:50][INFO]   DOT28.S: 45.313531 total, 45.313531 available (no locked funds)[0m
+[96m[18:23:50][INFO]   SOL: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:50][INFO]   USDT: -0.000000 total, -0.000000 available (no locked funds)[0m
+[96m[18:23:50][INFO]   XETH: 0.043823 total, 0.041632 locked, 0.002191 available[0m
+[96m[18:23:50][INFO]   XXBT: 0.000609 total, 0.000609 available (no locked funds)[0m
+[96m[18:23:50][INFO]   XXLM: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:50][INFO]   XXRP: 105.945477 total, 105.945477 available (no locked funds)[0m
+[96m[18:23:50][INFO]   ZCAD: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:23:50][INFO]   ZUSD: 68.804600 total, 68.804600 available (no locked funds)[0m
+[96m[18:23:50][INFO] ✅ Available balances calculated: 11 assets[0m
+[96m[18:23:50][INFO]    XETH: 0.002191 available (of 0.043823 total)[0m
+[96m[18:23:50][INFO] 📈 Fetching current prices...[0m
+[96m[18:23:50][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[18:23:50][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[18:23:50][INFO] 📊 Received ticker data for 3 pairs: ['XETHZUSD', 'XXBTZUSD', 'XXRPXXBT'][0m
+[92m[18:23:50][SUCCESS] ✅ ETH/USD: 3134.3300000[0m
+[92m[18:23:50][SUCCESS] ✅ BTC/USD: 91482.70 (for XRP/BTC order value conversion)[0m
+[92m[18:23:50][SUCCESS] ✅ XRP/BTC: 0.0000231[0m
+[96m[18:23:50][INFO] ✅ BTC/USD price successfully fetched: $91482.70 (will be used for XRP/BTC order value conversion)[0m
+[92m[18:23:50][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:23:50][INFO] 📊 Matched orders: {'ETH/USD': {'buy': 0, 'sell': 8}, 'XRP/BTC': {'buy': 0, 'sell': 10}}[0m
+[96m[18:23:50][INFO] 📊 XRP/BTC: Need 4 more buy orders (current: 0)[0m
+[96m[18:23:50][INFO] 🔍 XRP/BTC buy: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:23:50][INFO] 🔍 XRP/BTC order value calculation: 6.27 XRP × 0.00002247 BTC = 0.00014089 BTC × $91482.70/BTC = $12.89 USD[0m
+[96m[18:23:50][INFO] ✅ Order value for XRP/BTC: $12.89 USD (BTC: 0.00014089 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:50][SUCCESS] ✅ Placed BUY order for XRP/BTC: 6.27 @ 0.00002247 (ID: OT6TXS-TRJNF-PO3KS5)[0m
+[96m[18:23:50][INFO] 📝 Order recorded: XRP/BTC BUY 6.270000 @ 0.000022[0m
+[96m[18:23:51][INFO] 🔍 XRP/BTC order value calculation: 6.27 XRP × 0.00002190 BTC = 0.00013731 BTC × $91482.70/BTC = $12.56 USD[0m
+[96m[18:23:51][INFO] ✅ Order value for XRP/BTC: $12.56 USD (BTC: 0.00013731 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:51][SUCCESS] ✅ Placed BUY order for XRP/BTC: 6.27 @ 0.00002190 (ID: O7P3FT-Z5Z6J-NULMUB)[0m
+[96m[18:23:51][INFO] 📝 Order recorded: XRP/BTC BUY 6.270000 @ 0.000022[0m
+[96m[18:23:51][INFO] 🔍 XRP/BTC order value calculation: 6.27 XRP × 0.00002132 BTC = 0.00013368 BTC × $91482.70/BTC = $12.23 USD[0m
+[96m[18:23:51][INFO] ✅ Order value for XRP/BTC: $12.23 USD (BTC: 0.00013368 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:51][SUCCESS] ✅ Placed BUY order for XRP/BTC: 6.27 @ 0.00002132 (ID: OF4E5B-3VXKQ-M5PGPS)[0m
+[96m[18:23:51][INFO] 📝 Order recorded: XRP/BTC BUY 6.270000 @ 0.000021[0m
+[96m[18:23:51][INFO] 🔍 XRP/BTC order value calculation: 6.27 XRP × 0.00002075 BTC = 0.00013010 BTC × $91482.70/BTC = $11.90 USD[0m
+[96m[18:23:51][INFO] ✅ Order value for XRP/BTC: $11.90 USD (BTC: 0.00013010 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[92m[18:23:51][SUCCESS] ✅ Placed BUY order for XRP/BTC: 6.27 @ 0.00002075 (ID: ORSKZJ-64X6O-BXJSZW)[0m
+[96m[18:23:51][INFO] 📝 Order recorded: XRP/BTC BUY 6.270000 @ 0.000021[0m
+[96m[18:23:51][INFO] 📊 XRP/BTC: Can add 10 more sell orders (current: 10, max: 20)[0m
+[96m[18:23:51][INFO] 🔍 XRP/BTC sell: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:23:51][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[96m[18:23:51][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002939 BTC = 0.00029566 BTC × $91482.70/BTC = $27.05 USD[0m
+[96m[18:23:51][INFO] ✅ Order value for XRP/BTC: $27.05 USD (BTC: 0.00029566 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:51][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:51][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:51][ERROR]    Details: pair=XXRPXXBT, price=2.939e-05, volume=10.06[0m
+[96m[18:23:51][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002997 BTC = 0.00030150 BTC × $91482.70/BTC = $27.58 USD[0m
+[96m[18:23:51][INFO] ✅ Order value for XRP/BTC: $27.58 USD (BTC: 0.00030150 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:52][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:52][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:52][ERROR]    Details: pair=XXRPXXBT, price=2.997e-05, volume=10.06[0m
+[96m[18:23:52][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003054 BTC = 0.00030723 BTC × $91482.70/BTC = $28.11 USD[0m
+[96m[18:23:52][INFO] ✅ Order value for XRP/BTC: $28.11 USD (BTC: 0.00030723 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:52][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:52][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:52][ERROR]    Details: pair=XXRPXXBT, price=3.054e-05, volume=10.06[0m
+[96m[18:23:52][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003112 BTC = 0.00031307 BTC × $91482.70/BTC = $28.64 USD[0m
+[96m[18:23:52][INFO] ✅ Order value for XRP/BTC: $28.64 USD (BTC: 0.00031307 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:52][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:52][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:52][ERROR]    Details: pair=XXRPXXBT, price=3.112e-05, volume=10.06[0m
+[96m[18:23:52][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003169 BTC = 0.00031880 BTC × $91482.70/BTC = $29.16 USD[0m
+[96m[18:23:52][INFO] ✅ Order value for XRP/BTC: $29.16 USD (BTC: 0.00031880 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:52][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:52][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:52][ERROR]    Details: pair=XXRPXXBT, price=3.169e-05, volume=10.06[0m
+[96m[18:23:52][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003227 BTC = 0.00032464 BTC × $91482.70/BTC = $29.70 USD[0m
+[96m[18:23:52][INFO] ✅ Order value for XRP/BTC: $29.70 USD (BTC: 0.00032464 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:53][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:53][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:53][ERROR]    Details: pair=XXRPXXBT, price=3.227e-05, volume=10.06[0m
+[96m[18:23:53][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003285 BTC = 0.00033047 BTC × $91482.70/BTC = $30.23 USD[0m
+[96m[18:23:53][INFO] ✅ Order value for XRP/BTC: $30.23 USD (BTC: 0.00033047 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:53][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:53][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:53][ERROR]    Details: pair=XXRPXXBT, price=3.285e-05, volume=10.06[0m
+[96m[18:23:53][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003342 BTC = 0.00033621 BTC × $91482.70/BTC = $30.76 USD[0m
+[96m[18:23:53][INFO] ✅ Order value for XRP/BTC: $30.76 USD (BTC: 0.00033621 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:53][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:53][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:53][ERROR]    Details: pair=XXRPXXBT, price=3.342e-05, volume=10.06[0m
+[96m[18:23:53][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003400 BTC = 0.00034204 BTC × $91482.70/BTC = $31.29 USD[0m
+[96m[18:23:53][INFO] ✅ Order value for XRP/BTC: $31.29 USD (BTC: 0.00034204 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:53][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:53][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:53][ERROR]    Details: pair=XXRPXXBT, price=3.4e-05, volume=10.06[0m
+[96m[18:23:53][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003458 BTC = 0.00034787 BTC × $91482.70/BTC = $31.82 USD[0m
+[96m[18:23:53][INFO] ✅ Order value for XRP/BTC: $31.82 USD (BTC: 0.00034787 @ $91482.70/BTC) - PASSES minimum $10.00[0m
+[91m[18:23:54][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:23:54][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:23:54][ERROR]    Details: pair=XXRPXXBT, price=3.458e-05, volume=10.06[0m
+[96m[18:23:54][INFO] 📊 ETH/USD: Need 3 more buy orders (current: 0)[0m
+[96m[18:23:54][INFO] 🔍 ETH/USD buy: Using AVAILABLE balances - ZUSD: 68.804600 (total: 68.804600), XETH: 0.002191 (total: 0.043823)[0m
+[92m[18:23:54][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.006951 @ 3087.32 (ID: ONT3EO-X34SN-4WWMDN)[0m
+[96m[18:23:54][INFO] 📝 Order recorded: ETH/USD BUY 0.006951 @ 3087.320000[0m
+[92m[18:23:54][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.006951 @ 3040.30 (ID: OW555N-D6J6A-CJZRSC)[0m
+[96m[18:23:54][INFO] 📝 Order recorded: ETH/USD BUY 0.006951 @ 3040.300000[0m
+[92m[18:23:54][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.006951 @ 2993.29 (ID: OWPBOA-JKDJC-D63OBC)[0m
+[96m[18:23:54][INFO] 📝 Order recorded: ETH/USD BUY 0.006951 @ 2993.290000[0m
+[95m[18:23:54][ENHANCED] 📊 GENERATING PnL REPORT...[0m
+[93m[18:23:54][PNL] ============================================================[0m
+[93m[18:23:54][PNL] 📊 GRIDBOT PnL REPORT[0m
+[93m[18:23:54][PNL] ============================================================[0m
+[93m[18:23:54][PNL] 📅 Session Duration: 0:00:12.703971[0m
+[93m[18:23:54][PNL] 🕐 Started: 2025-12-07 18:23:42[0m
+[93m[18:23:54][PNL] 📭 No executions recorded yet[0m
+[93m[18:23:54][PNL] ----------------------------------------[0m
+[96m[18:24:04][INFO] 💰 Fetching current balances...[0m
+[96m[18:24:05][INFO]   DOT: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:05][INFO]   DOT.S: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:05][INFO]   DOT28.S: 45.313531 total, 45.313531 available (no locked funds)[0m
+[96m[18:24:05][INFO]   SOL: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:05][INFO]   USDT: -0.000000 total, -0.000000 available (no locked funds)[0m
+[96m[18:24:05][INFO]   XETH: 0.043823 total, 0.041632 locked, 0.002191 available[0m
+[96m[18:24:05][INFO]   XXBT: 0.000609 total, 0.000609 available (no locked funds)[0m
+[96m[18:24:05][INFO]   XXLM: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:05][INFO]   XXRP: 105.945477 total, 105.945477 available (no locked funds)[0m
+[96m[18:24:05][INFO]   ZCAD: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:05][INFO]   ZUSD: 68.804600 total, 63.399445 locked, 5.405155 available[0m
+[96m[18:24:05][INFO] ✅ Available balances calculated: 11 assets[0m
+[96m[18:24:05][INFO]    XETH: 0.002191 available (of 0.043823 total)[0m
+[96m[18:24:05][INFO]    ZUSD: 5.405155 available (of 68.804600 total)[0m
+[96m[18:24:05][INFO] 📈 Fetching current prices...[0m
+[96m[18:24:05][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[18:24:05][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[18:24:05][INFO] 📊 Received ticker data for 3 pairs: ['XETHZUSD', 'XXBTZUSD', 'XXRPXXBT'][0m
+[92m[18:24:05][SUCCESS] ✅ ETH/USD: 3134.3100000[0m
+[92m[18:24:05][SUCCESS] ✅ BTC/USD: 91489.40 (for XRP/BTC order value conversion)[0m
+[92m[18:24:05][SUCCESS] ✅ XRP/BTC: 0.0000230[0m
+[96m[18:24:05][INFO] ✅ BTC/USD price successfully fetched: $91489.40 (will be used for XRP/BTC order value conversion)[0m
+[92m[18:24:05][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:05][INFO] 📊 Matched orders: {'ETH/USD': {'buy': 3, 'sell': 8}, 'XRP/BTC': {'buy': 4, 'sell': 10}}[0m
+[96m[18:24:05][INFO] 📊 XRP/BTC: Can add 10 more sell orders (current: 10, max: 20)[0m
+[96m[18:24:05][INFO] 🔍 XRP/BTC sell: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:24:05][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[96m[18:24:05][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002932 BTC = 0.00029496 BTC × $91489.40/BTC = $26.99 USD[0m
+[96m[18:24:05][INFO] ✅ Order value for XRP/BTC: $26.99 USD (BTC: 0.00029496 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:05][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:05][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:05][ERROR]    Details: pair=XXRPXXBT, price=2.932e-05, volume=10.06[0m
+[96m[18:24:05][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002990 BTC = 0.00030079 BTC × $91489.40/BTC = $27.52 USD[0m
+[96m[18:24:05][INFO] ✅ Order value for XRP/BTC: $27.52 USD (BTC: 0.00030079 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:05][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:05][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:05][ERROR]    Details: pair=XXRPXXBT, price=2.99e-05, volume=10.06[0m
+[96m[18:24:06][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003047 BTC = 0.00030653 BTC × $91489.40/BTC = $28.04 USD[0m
+[96m[18:24:06][INFO] ✅ Order value for XRP/BTC: $28.04 USD (BTC: 0.00030653 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:06][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:06][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:06][ERROR]    Details: pair=XXRPXXBT, price=3.047e-05, volume=10.06[0m
+[96m[18:24:06][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003105 BTC = 0.00031236 BTC × $91489.40/BTC = $28.58 USD[0m
+[96m[18:24:06][INFO] ✅ Order value for XRP/BTC: $28.58 USD (BTC: 0.00031236 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:06][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:06][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:06][ERROR]    Details: pair=XXRPXXBT, price=3.105e-05, volume=10.06[0m
+[96m[18:24:06][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003163 BTC = 0.00031820 BTC × $91489.40/BTC = $29.11 USD[0m
+[96m[18:24:06][INFO] ✅ Order value for XRP/BTC: $29.11 USD (BTC: 0.00031820 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:06][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:06][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:06][ERROR]    Details: pair=XXRPXXBT, price=3.163e-05, volume=10.06[0m
+[96m[18:24:06][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003220 BTC = 0.00032393 BTC × $91489.40/BTC = $29.64 USD[0m
+[96m[18:24:06][INFO] ✅ Order value for XRP/BTC: $29.64 USD (BTC: 0.00032393 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:06][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:06][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:06][ERROR]    Details: pair=XXRPXXBT, price=3.22e-05, volume=10.06[0m
+[96m[18:24:06][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003278 BTC = 0.00032977 BTC × $91489.40/BTC = $30.17 USD[0m
+[96m[18:24:06][INFO] ✅ Order value for XRP/BTC: $30.17 USD (BTC: 0.00032977 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:07][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:07][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:07][ERROR]    Details: pair=XXRPXXBT, price=3.278e-05, volume=10.06[0m
+[96m[18:24:07][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003335 BTC = 0.00033550 BTC × $91489.40/BTC = $30.69 USD[0m
+[96m[18:24:07][INFO] ✅ Order value for XRP/BTC: $30.69 USD (BTC: 0.00033550 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:07][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:07][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:07][ERROR]    Details: pair=XXRPXXBT, price=3.335e-05, volume=10.06[0m
+[96m[18:24:07][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003393 BTC = 0.00034134 BTC × $91489.40/BTC = $31.23 USD[0m
+[96m[18:24:07][INFO] ✅ Order value for XRP/BTC: $31.23 USD (BTC: 0.00034134 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:07][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:07][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:07][ERROR]    Details: pair=XXRPXXBT, price=3.393e-05, volume=10.06[0m
+[96m[18:24:07][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003450 BTC = 0.00034707 BTC × $91489.40/BTC = $31.75 USD[0m
+[96m[18:24:07][INFO] ✅ Order value for XRP/BTC: $31.75 USD (BTC: 0.00034707 @ $91489.40/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:07][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:07][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:07][ERROR]    Details: pair=XXRPXXBT, price=3.45e-05, volume=10.06[0m
+[96m[18:24:17][INFO] 💰 Fetching current balances...[0m
+[96m[18:24:18][INFO]   DOT: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:18][INFO]   DOT.S: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:18][INFO]   DOT28.S: 45.313531 total, 45.313531 available (no locked funds)[0m
+[96m[18:24:18][INFO]   SOL: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:18][INFO]   USDT: -0.000000 total, -0.000000 available (no locked funds)[0m
+[96m[18:24:18][INFO]   XETH: 0.043823 total, 0.041632 locked, 0.002191 available[0m
+[96m[18:24:18][INFO]   XXBT: 0.000609 total, 0.000609 available (no locked funds)[0m
+[96m[18:24:18][INFO]   XXLM: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:18][INFO]   XXRP: 105.945477 total, 105.945477 available (no locked funds)[0m
+[96m[18:24:18][INFO]   ZCAD: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:18][INFO]   ZUSD: 68.804600 total, 63.399445 locked, 5.405155 available[0m
+[96m[18:24:18][INFO] ✅ Available balances calculated: 11 assets[0m
+[96m[18:24:18][INFO]    XETH: 0.002191 available (of 0.043823 total)[0m
+[96m[18:24:18][INFO]    ZUSD: 5.405155 available (of 68.804600 total)[0m
+[96m[18:24:18][INFO] 📈 Fetching current prices...[0m
+[96m[18:24:18][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[18:24:18][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[18:24:18][INFO] 📊 Received ticker data for 3 pairs: ['XETHZUSD', 'XXBTZUSD', 'XXRPXXBT'][0m
+[92m[18:24:18][SUCCESS] ✅ ETH/USD: 3134.3100000[0m
+[92m[18:24:18][SUCCESS] ✅ BTC/USD: 91486.10 (for XRP/BTC order value conversion)[0m
+[92m[18:24:18][SUCCESS] ✅ XRP/BTC: 0.0000230[0m
+[96m[18:24:18][INFO] ✅ BTC/USD price successfully fetched: $91486.10 (will be used for XRP/BTC order value conversion)[0m
+[92m[18:24:18][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:18][INFO] 📊 Matched orders: {'ETH/USD': {'buy': 3, 'sell': 8}, 'XRP/BTC': {'buy': 4, 'sell': 10}}[0m
+[96m[18:24:18][INFO] 📊 XRP/BTC: Can add 10 more sell orders (current: 10, max: 20)[0m
+[96m[18:24:18][INFO] 🔍 XRP/BTC sell: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:24:18][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[96m[18:24:18][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002932 BTC = 0.00029496 BTC × $91486.10/BTC = $26.98 USD[0m
+[96m[18:24:18][INFO] ✅ Order value for XRP/BTC: $26.98 USD (BTC: 0.00029496 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:18][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:18][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:18][ERROR]    Details: pair=XXRPXXBT, price=2.932e-05, volume=10.06[0m
+[96m[18:24:18][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002990 BTC = 0.00030079 BTC × $91486.10/BTC = $27.52 USD[0m
+[96m[18:24:18][INFO] ✅ Order value for XRP/BTC: $27.52 USD (BTC: 0.00030079 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:18][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:18][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:18][ERROR]    Details: pair=XXRPXXBT, price=2.99e-05, volume=10.06[0m
+[96m[18:24:18][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003047 BTC = 0.00030653 BTC × $91486.10/BTC = $28.04 USD[0m
+[96m[18:24:18][INFO] ✅ Order value for XRP/BTC: $28.04 USD (BTC: 0.00030653 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:19][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:19][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:19][ERROR]    Details: pair=XXRPXXBT, price=3.047e-05, volume=10.06[0m
+[96m[18:24:19][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003105 BTC = 0.00031236 BTC × $91486.10/BTC = $28.58 USD[0m
+[96m[18:24:19][INFO] ✅ Order value for XRP/BTC: $28.58 USD (BTC: 0.00031236 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:19][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:19][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:19][ERROR]    Details: pair=XXRPXXBT, price=3.105e-05, volume=10.06[0m
+[96m[18:24:19][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003163 BTC = 0.00031820 BTC × $91486.10/BTC = $29.11 USD[0m
+[96m[18:24:19][INFO] ✅ Order value for XRP/BTC: $29.11 USD (BTC: 0.00031820 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:19][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:19][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:19][ERROR]    Details: pair=XXRPXXBT, price=3.163e-05, volume=10.06[0m
+[96m[18:24:19][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003220 BTC = 0.00032393 BTC × $91486.10/BTC = $29.64 USD[0m
+[96m[18:24:19][INFO] ✅ Order value for XRP/BTC: $29.64 USD (BTC: 0.00032393 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:19][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:19][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:19][ERROR]    Details: pair=XXRPXXBT, price=3.22e-05, volume=10.06[0m
+[96m[18:24:19][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003278 BTC = 0.00032977 BTC × $91486.10/BTC = $30.17 USD[0m
+[96m[18:24:19][INFO] ✅ Order value for XRP/BTC: $30.17 USD (BTC: 0.00032977 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:20][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:20][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:20][ERROR]    Details: pair=XXRPXXBT, price=3.278e-05, volume=10.06[0m
+[96m[18:24:20][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003335 BTC = 0.00033550 BTC × $91486.10/BTC = $30.69 USD[0m
+[96m[18:24:20][INFO] ✅ Order value for XRP/BTC: $30.69 USD (BTC: 0.00033550 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:20][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:20][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:20][ERROR]    Details: pair=XXRPXXBT, price=3.335e-05, volume=10.06[0m
+[96m[18:24:20][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003393 BTC = 0.00034134 BTC × $91486.10/BTC = $31.23 USD[0m
+[96m[18:24:20][INFO] ✅ Order value for XRP/BTC: $31.23 USD (BTC: 0.00034134 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:20][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:20][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:20][ERROR]    Details: pair=XXRPXXBT, price=3.393e-05, volume=10.06[0m
+[96m[18:24:20][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003450 BTC = 0.00034707 BTC × $91486.10/BTC = $31.75 USD[0m
+[96m[18:24:20][INFO] ✅ Order value for XRP/BTC: $31.75 USD (BTC: 0.00034707 @ $91486.10/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:20][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:20][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:20][ERROR]    Details: pair=XXRPXXBT, price=3.45e-05, volume=10.06[0m
+[96m[18:24:31][INFO] 💰 Fetching current balances...[0m
+[96m[18:24:31][INFO]   DOT: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:31][INFO]   DOT.S: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:31][INFO]   DOT28.S: 45.313531 total, 45.313531 available (no locked funds)[0m
+[96m[18:24:31][INFO]   SOL: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:31][INFO]   USDT: -0.000000 total, -0.000000 available (no locked funds)[0m
+[96m[18:24:31][INFO]   XETH: 0.043823 total, 0.041632 locked, 0.002191 available[0m
+[96m[18:24:31][INFO]   XXBT: 0.000609 total, 0.000609 available (no locked funds)[0m
+[96m[18:24:31][INFO]   XXLM: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:31][INFO]   XXRP: 105.945477 total, 105.945477 available (no locked funds)[0m
+[96m[18:24:31][INFO]   ZCAD: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:31][INFO]   ZUSD: 68.804600 total, 63.399445 locked, 5.405155 available[0m
+[96m[18:24:31][INFO] ✅ Available balances calculated: 11 assets[0m
+[96m[18:24:31][INFO]    XETH: 0.002191 available (of 0.043823 total)[0m
+[96m[18:24:31][INFO]    ZUSD: 5.405155 available (of 68.804600 total)[0m
+[96m[18:24:31][INFO] 📈 Fetching current prices...[0m
+[96m[18:24:31][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[18:24:31][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[18:24:31][INFO] 📊 Received ticker data for 3 pairs: ['XETHZUSD', 'XXBTZUSD', 'XXRPXXBT'][0m
+[92m[18:24:31][SUCCESS] ✅ ETH/USD: 3135.1100000[0m
+[92m[18:24:31][SUCCESS] ✅ BTC/USD: 91486.00 (for XRP/BTC order value conversion)[0m
+[92m[18:24:31][SUCCESS] ✅ XRP/BTC: 0.0000230[0m
+[96m[18:24:31][INFO] ✅ BTC/USD price successfully fetched: $91486.00 (will be used for XRP/BTC order value conversion)[0m
+[92m[18:24:31][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:31][INFO] 📊 Matched orders: {'ETH/USD': {'buy': 3, 'sell': 8}, 'XRP/BTC': {'buy': 4, 'sell': 10}}[0m
+[96m[18:24:31][INFO] 📊 XRP/BTC: Can add 10 more sell orders (current: 10, max: 20)[0m
+[96m[18:24:31][INFO] 🔍 XRP/BTC sell: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:24:31][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[96m[18:24:31][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002932 BTC = 0.00029496 BTC × $91486.00/BTC = $26.98 USD[0m
+[96m[18:24:31][INFO] ✅ Order value for XRP/BTC: $26.98 USD (BTC: 0.00029496 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:31][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:31][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:31][ERROR]    Details: pair=XXRPXXBT, price=2.932e-05, volume=10.06[0m
+[96m[18:24:32][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002990 BTC = 0.00030079 BTC × $91486.00/BTC = $27.52 USD[0m
+[96m[18:24:32][INFO] ✅ Order value for XRP/BTC: $27.52 USD (BTC: 0.00030079 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:32][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:32][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:32][ERROR]    Details: pair=XXRPXXBT, price=2.99e-05, volume=10.06[0m
+[96m[18:24:32][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003047 BTC = 0.00030653 BTC × $91486.00/BTC = $28.04 USD[0m
+[96m[18:24:32][INFO] ✅ Order value for XRP/BTC: $28.04 USD (BTC: 0.00030653 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:32][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:32][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:32][ERROR]    Details: pair=XXRPXXBT, price=3.047e-05, volume=10.06[0m
+[96m[18:24:32][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003105 BTC = 0.00031236 BTC × $91486.00/BTC = $28.58 USD[0m
+[96m[18:24:32][INFO] ✅ Order value for XRP/BTC: $28.58 USD (BTC: 0.00031236 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:32][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:32][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:32][ERROR]    Details: pair=XXRPXXBT, price=3.105e-05, volume=10.06[0m
+[96m[18:24:32][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003163 BTC = 0.00031820 BTC × $91486.00/BTC = $29.11 USD[0m
+[96m[18:24:32][INFO] ✅ Order value for XRP/BTC: $29.11 USD (BTC: 0.00031820 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:32][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:32][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:32][ERROR]    Details: pair=XXRPXXBT, price=3.163e-05, volume=10.06[0m
+[96m[18:24:33][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003220 BTC = 0.00032393 BTC × $91486.00/BTC = $29.64 USD[0m
+[96m[18:24:33][INFO] ✅ Order value for XRP/BTC: $29.64 USD (BTC: 0.00032393 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:33][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:33][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:33][ERROR]    Details: pair=XXRPXXBT, price=3.22e-05, volume=10.06[0m
+[96m[18:24:33][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003278 BTC = 0.00032977 BTC × $91486.00/BTC = $30.17 USD[0m
+[96m[18:24:33][INFO] ✅ Order value for XRP/BTC: $30.17 USD (BTC: 0.00032977 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:33][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:33][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:33][ERROR]    Details: pair=XXRPXXBT, price=3.278e-05, volume=10.06[0m
+[96m[18:24:33][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003335 BTC = 0.00033550 BTC × $91486.00/BTC = $30.69 USD[0m
+[96m[18:24:33][INFO] ✅ Order value for XRP/BTC: $30.69 USD (BTC: 0.00033550 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:33][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:33][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:33][ERROR]    Details: pair=XXRPXXBT, price=3.335e-05, volume=10.06[0m
+[96m[18:24:33][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003393 BTC = 0.00034134 BTC × $91486.00/BTC = $31.23 USD[0m
+[96m[18:24:33][INFO] ✅ Order value for XRP/BTC: $31.23 USD (BTC: 0.00034134 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:33][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:33][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:33][ERROR]    Details: pair=XXRPXXBT, price=3.393e-05, volume=10.06[0m
+[96m[18:24:34][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003450 BTC = 0.00034707 BTC × $91486.00/BTC = $31.75 USD[0m
+[96m[18:24:34][INFO] ✅ Order value for XRP/BTC: $31.75 USD (BTC: 0.00034707 @ $91486.00/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:34][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:34][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:34][ERROR]    Details: pair=XXRPXXBT, price=3.45e-05, volume=10.06[0m
+[96m[18:24:44][INFO] 💰 Fetching current balances...[0m
+[96m[18:24:44][INFO]   DOT: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:44][INFO]   DOT.S: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:44][INFO]   DOT28.S: 45.313531 total, 45.313531 available (no locked funds)[0m
+[96m[18:24:44][INFO]   SOL: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:44][INFO]   USDT: -0.000000 total, -0.000000 available (no locked funds)[0m
+[96m[18:24:44][INFO]   XETH: 0.043823 total, 0.041632 locked, 0.002191 available[0m
+[96m[18:24:44][INFO]   XXBT: 0.000609 total, 0.000609 available (no locked funds)[0m
+[96m[18:24:44][INFO]   XXLM: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:44][INFO]   XXRP: 105.945477 total, 105.945477 available (no locked funds)[0m
+[96m[18:24:44][INFO]   ZCAD: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:44][INFO]   ZUSD: 68.804600 total, 63.399445 locked, 5.405155 available[0m
+[96m[18:24:44][INFO] ✅ Available balances calculated: 11 assets[0m
+[96m[18:24:44][INFO]    XETH: 0.002191 available (of 0.043823 total)[0m
+[96m[18:24:44][INFO]    ZUSD: 5.405155 available (of 68.804600 total)[0m
+[96m[18:24:44][INFO] 📈 Fetching current prices...[0m
+[96m[18:24:44][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[18:24:44][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[18:24:44][INFO] 📊 Received ticker data for 3 pairs: ['XETHZUSD', 'XXBTZUSD', 'XXRPXXBT'][0m
+[92m[18:24:44][SUCCESS] ✅ ETH/USD: 3135.2200000[0m
+[92m[18:24:44][SUCCESS] ✅ BTC/USD: 91524.20 (for XRP/BTC order value conversion)[0m
+[92m[18:24:44][SUCCESS] ✅ XRP/BTC: 0.0000230[0m
+[96m[18:24:44][INFO] ✅ BTC/USD price successfully fetched: $91524.20 (will be used for XRP/BTC order value conversion)[0m
+[92m[18:24:44][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:44][INFO] 📊 Matched orders: {'ETH/USD': {'buy': 3, 'sell': 8}, 'XRP/BTC': {'buy': 4, 'sell': 10}}[0m
+[96m[18:24:44][INFO] 📊 XRP/BTC: Can add 10 more sell orders (current: 10, max: 20)[0m
+[96m[18:24:44][INFO] 🔍 XRP/BTC sell: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:24:44][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[96m[18:24:44][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002932 BTC = 0.00029496 BTC × $91524.20/BTC = $27.00 USD[0m
+[96m[18:24:44][INFO] ✅ Order value for XRP/BTC: $27.00 USD (BTC: 0.00029496 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:45][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:45][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:45][ERROR]    Details: pair=XXRPXXBT, price=2.932e-05, volume=10.06[0m
+[96m[18:24:45][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002990 BTC = 0.00030079 BTC × $91524.20/BTC = $27.53 USD[0m
+[96m[18:24:45][INFO] ✅ Order value for XRP/BTC: $27.53 USD (BTC: 0.00030079 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:45][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:45][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:45][ERROR]    Details: pair=XXRPXXBT, price=2.99e-05, volume=10.06[0m
+[96m[18:24:45][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003047 BTC = 0.00030653 BTC × $91524.20/BTC = $28.05 USD[0m
+[96m[18:24:45][INFO] ✅ Order value for XRP/BTC: $28.05 USD (BTC: 0.00030653 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:45][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:45][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:45][ERROR]    Details: pair=XXRPXXBT, price=3.047e-05, volume=10.06[0m
+[96m[18:24:45][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003105 BTC = 0.00031236 BTC × $91524.20/BTC = $28.59 USD[0m
+[96m[18:24:45][INFO] ✅ Order value for XRP/BTC: $28.59 USD (BTC: 0.00031236 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:45][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:45][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:45][ERROR]    Details: pair=XXRPXXBT, price=3.105e-05, volume=10.06[0m
+[96m[18:24:46][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003163 BTC = 0.00031820 BTC × $91524.20/BTC = $29.12 USD[0m
+[96m[18:24:46][INFO] ✅ Order value for XRP/BTC: $29.12 USD (BTC: 0.00031820 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:46][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:46][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:46][ERROR]    Details: pair=XXRPXXBT, price=3.163e-05, volume=10.06[0m
+[96m[18:24:46][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003220 BTC = 0.00032393 BTC × $91524.20/BTC = $29.65 USD[0m
+[96m[18:24:46][INFO] ✅ Order value for XRP/BTC: $29.65 USD (BTC: 0.00032393 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:46][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:46][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:46][ERROR]    Details: pair=XXRPXXBT, price=3.22e-05, volume=10.06[0m
+[96m[18:24:46][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003278 BTC = 0.00032977 BTC × $91524.20/BTC = $30.18 USD[0m
+[96m[18:24:46][INFO] ✅ Order value for XRP/BTC: $30.18 USD (BTC: 0.00032977 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:46][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:46][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:46][ERROR]    Details: pair=XXRPXXBT, price=3.278e-05, volume=10.06[0m
+[96m[18:24:46][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003335 BTC = 0.00033550 BTC × $91524.20/BTC = $30.71 USD[0m
+[96m[18:24:46][INFO] ✅ Order value for XRP/BTC: $30.71 USD (BTC: 0.00033550 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:46][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:46][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:46][ERROR]    Details: pair=XXRPXXBT, price=3.335e-05, volume=10.06[0m
+[96m[18:24:47][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003393 BTC = 0.00034134 BTC × $91524.20/BTC = $31.24 USD[0m
+[96m[18:24:47][INFO] ✅ Order value for XRP/BTC: $31.24 USD (BTC: 0.00034134 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:47][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:47][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:47][ERROR]    Details: pair=XXRPXXBT, price=3.393e-05, volume=10.06[0m
+[96m[18:24:47][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003450 BTC = 0.00034707 BTC × $91524.20/BTC = $31.77 USD[0m
+[96m[18:24:47][INFO] ✅ Order value for XRP/BTC: $31.77 USD (BTC: 0.00034707 @ $91524.20/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:47][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:47][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:47][ERROR]    Details: pair=XXRPXXBT, price=3.45e-05, volume=10.06[0m
+[96m[18:24:57][INFO] 💰 Fetching current balances...[0m
+[96m[18:24:58][INFO]   DOT: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:58][INFO]   DOT.S: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:58][INFO]   DOT28.S: 45.313531 total, 45.313531 available (no locked funds)[0m
+[96m[18:24:58][INFO]   SOL: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:58][INFO]   USDT: -0.000000 total, -0.000000 available (no locked funds)[0m
+[96m[18:24:58][INFO]   XETH: 0.043823 total, 0.041632 locked, 0.002191 available[0m
+[96m[18:24:58][INFO]   XXBT: 0.000609 total, 0.000609 available (no locked funds)[0m
+[96m[18:24:58][INFO]   XXLM: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:58][INFO]   XXRP: 105.945477 total, 105.945477 available (no locked funds)[0m
+[96m[18:24:58][INFO]   ZCAD: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:24:58][INFO]   ZUSD: 68.804600 total, 63.399445 locked, 5.405155 available[0m
+[96m[18:24:58][INFO] ✅ Available balances calculated: 11 assets[0m
+[96m[18:24:58][INFO]    XETH: 0.002191 available (of 0.043823 total)[0m
+[96m[18:24:58][INFO]    ZUSD: 5.405155 available (of 68.804600 total)[0m
+[96m[18:24:58][INFO] 📈 Fetching current prices...[0m
+[96m[18:24:58][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[18:24:58][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[18:24:58][INFO] 📊 Received ticker data for 3 pairs: ['XETHZUSD', 'XXBTZUSD', 'XXRPXXBT'][0m
+[92m[18:24:58][SUCCESS] ✅ ETH/USD: 3145.4500000[0m
+[92m[18:24:58][SUCCESS] ✅ BTC/USD: 91559.80 (for XRP/BTC order value conversion)[0m
+[92m[18:24:58][SUCCESS] ✅ XRP/BTC: 0.0000230[0m
+[96m[18:24:58][INFO] ✅ BTC/USD price successfully fetched: $91559.80 (will be used for XRP/BTC order value conversion)[0m
+[92m[18:24:58][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:24:58][INFO] 📊 Matched orders: {'ETH/USD': {'buy': 3, 'sell': 8}, 'XRP/BTC': {'buy': 4, 'sell': 10}}[0m
+[96m[18:24:58][INFO] 📊 XRP/BTC: Can add 10 more sell orders (current: 10, max: 20)[0m
+[96m[18:24:58][INFO] 🔍 XRP/BTC sell: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:24:58][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[96m[18:24:58][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002932 BTC = 0.00029496 BTC × $91559.80/BTC = $27.01 USD[0m
+[96m[18:24:58][INFO] ✅ Order value for XRP/BTC: $27.01 USD (BTC: 0.00029496 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:58][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:58][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:58][ERROR]    Details: pair=XXRPXXBT, price=2.932e-05, volume=10.06[0m
+[96m[18:24:58][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002990 BTC = 0.00030079 BTC × $91559.80/BTC = $27.54 USD[0m
+[96m[18:24:58][INFO] ✅ Order value for XRP/BTC: $27.54 USD (BTC: 0.00030079 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:58][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:58][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:58][ERROR]    Details: pair=XXRPXXBT, price=2.99e-05, volume=10.06[0m
+[96m[18:24:58][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003047 BTC = 0.00030653 BTC × $91559.80/BTC = $28.07 USD[0m
+[96m[18:24:58][INFO] ✅ Order value for XRP/BTC: $28.07 USD (BTC: 0.00030653 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:59][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:59][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:59][ERROR]    Details: pair=XXRPXXBT, price=3.047e-05, volume=10.06[0m
+[96m[18:24:59][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003105 BTC = 0.00031236 BTC × $91559.80/BTC = $28.60 USD[0m
+[96m[18:24:59][INFO] ✅ Order value for XRP/BTC: $28.60 USD (BTC: 0.00031236 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:59][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:59][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:59][ERROR]    Details: pair=XXRPXXBT, price=3.105e-05, volume=10.06[0m
+[96m[18:24:59][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003163 BTC = 0.00031820 BTC × $91559.80/BTC = $29.13 USD[0m
+[96m[18:24:59][INFO] ✅ Order value for XRP/BTC: $29.13 USD (BTC: 0.00031820 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:59][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:59][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:59][ERROR]    Details: pair=XXRPXXBT, price=3.163e-05, volume=10.06[0m
+[96m[18:24:59][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003220 BTC = 0.00032393 BTC × $91559.80/BTC = $29.66 USD[0m
+[96m[18:24:59][INFO] ✅ Order value for XRP/BTC: $29.66 USD (BTC: 0.00032393 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:24:59][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:24:59][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:24:59][ERROR]    Details: pair=XXRPXXBT, price=3.22e-05, volume=10.06[0m
+[96m[18:24:59][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003278 BTC = 0.00032977 BTC × $91559.80/BTC = $30.19 USD[0m
+[96m[18:24:59][INFO] ✅ Order value for XRP/BTC: $30.19 USD (BTC: 0.00032977 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:00][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:00][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:00][ERROR]    Details: pair=XXRPXXBT, price=3.278e-05, volume=10.06[0m
+[96m[18:25:00][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003335 BTC = 0.00033550 BTC × $91559.80/BTC = $30.72 USD[0m
+[96m[18:25:00][INFO] ✅ Order value for XRP/BTC: $30.72 USD (BTC: 0.00033550 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:00][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:00][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:00][ERROR]    Details: pair=XXRPXXBT, price=3.335e-05, volume=10.06[0m
+[96m[18:25:00][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003393 BTC = 0.00034134 BTC × $91559.80/BTC = $31.25 USD[0m
+[96m[18:25:00][INFO] ✅ Order value for XRP/BTC: $31.25 USD (BTC: 0.00034134 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:00][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:00][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:00][ERROR]    Details: pair=XXRPXXBT, price=3.393e-05, volume=10.06[0m
+[96m[18:25:00][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003450 BTC = 0.00034707 BTC × $91559.80/BTC = $31.78 USD[0m
+[96m[18:25:00][INFO] ✅ Order value for XRP/BTC: $31.78 USD (BTC: 0.00034707 @ $91559.80/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:00][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:00][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:00][ERROR]    Details: pair=XXRPXXBT, price=3.45e-05, volume=10.06[0m
+[96m[18:25:10][INFO] 💰 Fetching current balances...[0m
+[96m[18:25:11][INFO]   DOT: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:25:11][INFO]   DOT.S: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:25:11][INFO]   DOT28.S: 45.313531 total, 45.313531 available (no locked funds)[0m
+[96m[18:25:11][INFO]   SOL: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:25:11][INFO]   USDT: -0.000000 total, -0.000000 available (no locked funds)[0m
+[96m[18:25:11][INFO]   XETH: 0.043823 total, 0.041632 locked, 0.002191 available[0m
+[96m[18:25:11][INFO]   XXBT: 0.000609 total, 0.000609 available (no locked funds)[0m
+[96m[18:25:11][INFO]   XXLM: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:25:11][INFO]   XXRP: 105.945477 total, 105.945477 available (no locked funds)[0m
+[96m[18:25:11][INFO]   ZCAD: 0.000000 total, 0.000000 available (no locked funds)[0m
+[96m[18:25:11][INFO]   ZUSD: 68.804600 total, 63.399445 locked, 5.405155 available[0m
+[96m[18:25:11][INFO] ✅ Available balances calculated: 11 assets[0m
+[96m[18:25:11][INFO]    XETH: 0.002191 available (of 0.043823 total)[0m
+[96m[18:25:11][INFO]    ZUSD: 5.405155 available (of 68.804600 total)[0m
+[96m[18:25:11][INFO] 📈 Fetching current prices...[0m
+[96m[18:25:11][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[18:25:11][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[18:25:11][INFO] 📊 Received ticker data for 3 pairs: ['XETHZUSD', 'XXBTZUSD', 'XXRPXXBT'][0m
+[92m[18:25:11][SUCCESS] ✅ ETH/USD: 3139.2200000[0m
+[92m[18:25:11][SUCCESS] ✅ BTC/USD: 91559.90 (for XRP/BTC order value conversion)[0m
+[92m[18:25:11][SUCCESS] ✅ XRP/BTC: 0.0000230[0m
+[96m[18:25:11][INFO] ✅ BTC/USD price successfully fetched: $91559.90 (will be used for XRP/BTC order value conversion)[0m
+[92m[18:25:11][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'ETHUSD' -> 'ETH/USD' (normalized: 'XETHZUSD')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 ✅ Matched 'XRPXBT' -> 'XRP/BTC' (normalized: 'XXRPXXBT')[0m
+[96m[18:25:11][INFO] 📊 Matched orders: {'ETH/USD': {'buy': 3, 'sell': 8}, 'XRP/BTC': {'buy': 4, 'sell': 10}}[0m
+[96m[18:25:11][INFO] 📊 XRP/BTC: Can add 10 more sell orders (current: 10, max: 20)[0m
+[96m[18:25:11][INFO] 🔍 XRP/BTC sell: Using AVAILABLE balances - XXBT: 0.000609 (total: 0.000609), XXRP: 105.945477 (total: 105.945477)[0m
+[96m[18:25:11][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[96m[18:25:11][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002932 BTC = 0.00029496 BTC × $91559.90/BTC = $27.01 USD[0m
+[96m[18:25:11][INFO] ✅ Order value for XRP/BTC: $27.01 USD (BTC: 0.00029496 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:11][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:11][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:11][ERROR]    Details: pair=XXRPXXBT, price=2.932e-05, volume=10.06[0m
+[96m[18:25:11][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00002990 BTC = 0.00030079 BTC × $91559.90/BTC = $27.54 USD[0m
+[96m[18:25:11][INFO] ✅ Order value for XRP/BTC: $27.54 USD (BTC: 0.00030079 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:12][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:12][ERROR]    Details: pair=XXRPXXBT, price=2.99e-05, volume=10.06[0m
+[96m[18:25:12][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003047 BTC = 0.00030653 BTC × $91559.90/BTC = $28.07 USD[0m
+[96m[18:25:12][INFO] ✅ Order value for XRP/BTC: $28.07 USD (BTC: 0.00030653 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:12][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:12][ERROR]    Details: pair=XXRPXXBT, price=3.047e-05, volume=10.06[0m
+[96m[18:25:12][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003105 BTC = 0.00031236 BTC × $91559.90/BTC = $28.60 USD[0m
+[96m[18:25:12][INFO] ✅ Order value for XRP/BTC: $28.60 USD (BTC: 0.00031236 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:12][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:12][ERROR]    Details: pair=XXRPXXBT, price=3.105e-05, volume=10.06[0m
+[96m[18:25:12][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003163 BTC = 0.00031820 BTC × $91559.90/BTC = $29.13 USD[0m
+[96m[18:25:12][INFO] ✅ Order value for XRP/BTC: $29.13 USD (BTC: 0.00031820 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:12][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:12][ERROR]    Details: pair=XXRPXXBT, price=3.163e-05, volume=10.06[0m
+[96m[18:25:12][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003220 BTC = 0.00032393 BTC × $91559.90/BTC = $29.66 USD[0m
+[96m[18:25:12][INFO] ✅ Order value for XRP/BTC: $29.66 USD (BTC: 0.00032393 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:12][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:12][ERROR]    Details: pair=XXRPXXBT, price=3.22e-05, volume=10.06[0m
+[96m[18:25:13][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003278 BTC = 0.00032977 BTC × $91559.90/BTC = $30.19 USD[0m
+[96m[18:25:13][INFO] ✅ Order value for XRP/BTC: $30.19 USD (BTC: 0.00032977 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:13][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:13][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:13][ERROR]    Details: pair=XXRPXXBT, price=3.278e-05, volume=10.06[0m
+[96m[18:25:13][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003335 BTC = 0.00033550 BTC × $91559.90/BTC = $30.72 USD[0m
+[96m[18:25:13][INFO] ✅ Order value for XRP/BTC: $30.72 USD (BTC: 0.00033550 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:13][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:13][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:13][ERROR]    Details: pair=XXRPXXBT, price=3.335e-05, volume=10.06[0m
+[96m[18:25:13][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003393 BTC = 0.00034134 BTC × $91559.90/BTC = $31.25 USD[0m
+[96m[18:25:13][INFO] ✅ Order value for XRP/BTC: $31.25 USD (BTC: 0.00034134 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:13][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:13][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:13][ERROR]    Details: pair=XXRPXXBT, price=3.393e-05, volume=10.06[0m
+[96m[18:25:13][INFO] 🔍 XRP/BTC order value calculation: 10.06 XRP × 0.00003450 BTC = 0.00034707 BTC × $91559.90/BTC = $31.78 USD[0m
+[96m[18:25:13][INFO] ✅ Order value for XRP/BTC: $31.78 USD (BTC: 0.00034707 @ $91559.90/BTC) - PASSES minimum $10.00[0m
+[91m[18:25:14][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[18:25:14][ERROR] ❌ Failed to place sell order for XRP/BTC - API call returned None[0m
+[91m[18:25:14][ERROR]    Details: pair=XXRPXXBT, price=3.45e-05, volume=10.06[0m

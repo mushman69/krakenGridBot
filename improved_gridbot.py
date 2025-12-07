@@ -787,25 +787,25 @@ class ImprovedGridBot:
                 
                 if order_type == 'buy':
                     # Buy orders lock the base currency (USD for ETH/USD, BTC for XRP/BTC)
-                    pair_str = desc.get('pair', '')
+                    pair_str = desc.get('pair', '').upper()
                     if 'ETH' in pair_str and 'USD' in pair_str:
                         # ETH/USD buy order: locks USD
                         price = float(desc.get('price', 0))
                         locked_usd = vol * price
                         locked_funds['ZUSD'] = locked_funds.get('ZUSD', 0) + locked_usd
-                    elif 'XRP' in pair_str and 'BTC' in pair_str:
-                        # XRP/BTC buy order: locks BTC
+                    elif 'XRP' in pair_str and ('BTC' in pair_str or 'XBT' in pair_str):
+                        # XRP/BTC buy order: locks BTC (Kraken returns XRPXBT, not XRPBTC)
                         price = float(desc.get('price', 0))
                         locked_btc = vol * price
                         locked_funds['XXBT'] = locked_funds.get('XXBT', 0) + locked_btc
                 elif order_type == 'sell':
                     # Sell orders lock the quote currency (ETH for ETH/USD, XRP for XRP/BTC)
-                    pair_str = desc.get('pair', '')
+                    pair_str = desc.get('pair', '').upper()
                     if 'ETH' in pair_str and 'USD' in pair_str:
                         # ETH/USD sell order: locks ETH
                         locked_funds['XETH'] = locked_funds.get('XETH', 0) + vol
-                    elif 'XRP' in pair_str and 'BTC' in pair_str:
-                        # XRP/BTC sell order: locks XRP
+                    elif 'XRP' in pair_str and ('BTC' in pair_str or 'XBT' in pair_str):
+                        # XRP/BTC sell order: locks XRP (Kraken returns XRPXBT, not XRPBTC)
                         locked_funds['XXRP'] = locked_funds.get('XXRP', 0) + vol
             
             # Calculate and store available balances (total - locked)
@@ -1727,8 +1727,29 @@ class ImprovedGridBot:
                 
                 # Check if we need to add sell orders
                 if sell_count < min_orders_per_side:
-                    needed = min_orders_per_side - sell_count
-                    Logger.info(f"📊 {pair}: Need {needed} more sell orders (current: {sell_count})")
+                    # Calculate how many orders we can actually place based on available balance
+                    quote_asset = config.get('quote_asset')
+                    if hasattr(self, 'available_balances') and self.available_balances:
+                        quote_balance = float(self.available_balances.get(quote_asset, self.balances.get(quote_asset, 0)))
+                    else:
+                        quote_balance = float(self.balances.get(quote_asset, 0))
+                    
+                    # Calculate maximum total orders we can place
+                    if pair == "ETH/USD":
+                        # For ETH/USD: minimum 0.005 ETH per order
+                        max_possible_total = int(quote_balance * 0.95 / 0.005)  # Use 95% of available
+                        max_possible_total = min(max_orders_per_side, max(min_orders_per_side, max_possible_total))
+                    else:
+                        # For XRP/BTC: minimum 10 XRP per order
+                        max_possible_total = int(quote_balance * 0.95 / 10)
+                        max_possible_total = min(max_orders_per_side, max(min_orders_per_side, max_possible_total))
+                    
+                    # Calculate how many NEW orders to place (up to max possible, but at least enough to reach minimum)
+                    min_needed = min_orders_per_side - sell_count  # Minimum to reach min_orders_per_side
+                    max_can_add = max_possible_total - sell_count   # Maximum we can add
+                    needed = max(min_needed, min(max_can_add, max_orders_per_side - sell_count))
+                    
+                    Logger.info(f"📊 {pair}: Need {needed} more sell orders (current: {sell_count}, can place up to {max_possible_total} total, adding {needed})")
                     
                     volume = self.calculate_order_volume(pair, 'sell', config, current_price, needed)
                     if volume:
