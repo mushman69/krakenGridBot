@@ -1,0 +1,352 @@
+GridBot Logs Export
+Container: kraken_gridbot_pnl
+Exported: 2025-12-04 04:40:38
+================================================================================
+
+[INFO] ✅ Loaded environment from: kraken.env
+[96m[04:39:56][INFO] 📝 File logging enabled: logs/gridbot_20251204_043956.log[0m
+[95m[04:39:56][ENHANCED] 🕐 Checking container time synchronization...[0m
+[96m[04:39:56][INFO] 📅 Container time: Thu Dec 04 04:39:56 UTC 2025[0m
+[96m[04:39:56][INFO] 🌍 UTC time: Thu Dec 04 04:39:56 UTC 2025[0m
+[95m[04:39:56][ENHANCED] ⏳ Adding 6s startup delay to prevent nonce conflicts...[0m
+[92m[04:40:02][SUCCESS] ✅ API credentials configured[0m
+[92m[04:40:02][SUCCESS] ✅ PnL database initialized successfully[0m
+[95m[04:40:02][ENHANCED] 🚀 ENHANCED MULTI-PAIR GRIDBOT WITH PnL TRACKING 🚀[0m
+[96m[04:40:02][INFO] 📈 Trading pairs enabled: 2[0m
+[96m[04:40:02][INFO]   XRP/BTC: 2.5% spacing, 60.0% allocation[0m
+[96m[04:40:02][INFO]   ETH/USD: 1.5% spacing, 40.0% allocation[0m
+[96m[04:40:02][INFO] 📊 PnL Tracking: ENABLED (reporting every 5 minutes)[0m
+[95m[04:40:02][ENHANCED] 🎯 STARTING GRIDBOT TRADING SESSION[0m
+[96m[04:40:02][INFO] 💰 Fetching current balances...[0m
+[96m[04:40:03][INFO] 💰 Current balances:[0m
+[96m[04:40:03][INFO]   DOT28.S: 45.235442[0m
+[96m[04:40:03][INFO]   XETH: 0.032400[0m
+[96m[04:40:03][INFO]   XXBT: 0.000609[0m
+[96m[04:40:03][INFO]   XXRP: 105.945477[0m
+[96m[04:40:03][INFO]   ZUSD: 103.953300[0m
+[96m[04:40:03][INFO] 📈 Fetching current prices...[0m
+[96m[04:40:03][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[04:40:03][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[92m[04:40:03][SUCCESS] ✅ ETH/USD: 3203.1600000[0m
+[92m[04:40:03][SUCCESS] ✅ XRP/BTC: 0.0000235[0m
+[92m[04:40:03][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[95m[04:40:03][ENHANCED] 🧹 CANCELING ALL EXISTING ORDERS...[0m
+[92m[04:40:03][SUCCESS] ✅ Canceled 12 existing orders[0m
+[95m[04:40:03][ENHANCED] 📊 Creating initial grid orders...[0m
+[95m[04:40:03][ENHANCED] 📊 Creating grid for XRP/BTC at price 0.000023[0m
+[93m[04:40:03][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:03][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:03][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:03][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:03][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:03][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:03][INFO] 📊 Calculated sell volume for XRP/BTC: 10.06 XRP (from 100.65 available, 10 orders)[0m
+[93m[04:40:03][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:04][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:04][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:04][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:04][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:04][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:04][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:04][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:04][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:04][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[92m[04:40:04][SUCCESS] ✅ Created 0 grid orders for XRP/BTC[0m
+[95m[04:40:05][ENHANCED] 📊 Creating grid for ETH/USD at price 3203.160000[0m
+[92m[04:40:06][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005138 @ 3155.11 (ID: OZX3R4-CV5WC-VJYJQO)[0m
+[96m[04:40:06][INFO] 📝 Order recorded: ETH/USD BUY 0.005138 @ 3155.110000[0m
+[92m[04:40:06][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005138 @ 3107.07 (ID: OVGUP2-IHD4T-DQDSF6)[0m
+[96m[04:40:06][INFO] 📝 Order recorded: ETH/USD BUY 0.005138 @ 3107.070000[0m
+[92m[04:40:06][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005138 @ 3059.02 (ID: OD7AIZ-LFFHQ-NSUMEG)[0m
+[96m[04:40:06][INFO] 📝 Order recorded: ETH/USD BUY 0.005138 @ 3059.020000[0m
+[92m[04:40:06][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005138 @ 3010.97 (ID: OAPOLM-DMNI7-4K35TK)[0m
+[96m[04:40:06][INFO] 📝 Order recorded: ETH/USD BUY 0.005138 @ 3010.970000[0m
+[92m[04:40:07][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005138 @ 2962.92 (ID: O3FAW7-33UGJ-SOWBWK)[0m
+[96m[04:40:07][INFO] 📝 Order recorded: ETH/USD BUY 0.005138 @ 2962.920000[0m
+[92m[04:40:07][SUCCESS] ✅ Placed BUY order for ETH/USD: 0.005138 @ 2914.88 (ID: OWZ7E3-DCQZ7-TNS4MB)[0m
+[96m[04:40:07][INFO] 📝 Order recorded: ETH/USD BUY 0.005138 @ 2914.880000[0m
+[96m[04:40:07][INFO] 📊 Calculated sell volume for ETH/USD: 0.005130 ETH (from 0.030780 available, 6 orders)[0m
+[92m[04:40:07][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005130 @ 3251.21 (ID: OPPWJA-DFHAI-DZ5TDZ)[0m
+[96m[04:40:07][INFO] 📝 Order recorded: ETH/USD SELL 0.005130 @ 3251.210000[0m
+[92m[04:40:07][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005130 @ 3299.25 (ID: OYU7XO-FULIE-IA4HYU)[0m
+[96m[04:40:07][INFO] 📝 Order recorded: ETH/USD SELL 0.005130 @ 3299.250000[0m
+[92m[04:40:08][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005130 @ 3347.30 (ID: OEO7SS-7635S-TJ65AR)[0m
+[96m[04:40:08][INFO] 📝 Order recorded: ETH/USD SELL 0.005130 @ 3347.300000[0m
+[92m[04:40:08][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005130 @ 3395.35 (ID: O5VURD-T22WZ-X5DV7T)[0m
+[96m[04:40:08][INFO] 📝 Order recorded: ETH/USD SELL 0.005130 @ 3395.350000[0m
+[92m[04:40:08][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005130 @ 3443.40 (ID: O3D52Z-R4UKE-NIWKWN)[0m
+[96m[04:40:08][INFO] 📝 Order recorded: ETH/USD SELL 0.005130 @ 3443.400000[0m
+[92m[04:40:08][SUCCESS] ✅ Placed SELL order for ETH/USD: 0.005130 @ 3491.44 (ID: OCBLEA-2A3TO-VB2NAW)[0m
+[96m[04:40:08][INFO] 📝 Order recorded: ETH/USD SELL 0.005130 @ 3491.440000[0m
+[92m[04:40:08][SUCCESS] ✅ Created 12 grid orders for ETH/USD[0m
+[92m[04:40:09][SUCCESS] 🎉 GridBot initialized successfully![0m
+[96m[04:40:09][INFO] 📊 PnL tracking active - check logs for execution reports[0m
+[96m[04:40:09][INFO] ⏱️ Monitoring orders every 10 seconds[0m
+[96m[04:40:09][INFO] 💰 Fetching current balances...[0m
+[96m[04:40:09][INFO] 💰 Current balances:[0m
+[96m[04:40:09][INFO]   DOT28.S: 45.235442[0m
+[96m[04:40:09][INFO]   XETH: 0.032400[0m
+[96m[04:40:09][INFO]   XXBT: 0.000609[0m
+[96m[04:40:09][INFO]   XXRP: 105.945477[0m
+[96m[04:40:09][INFO]   ZUSD: 103.953300[0m
+[96m[04:40:09][INFO] 📈 Fetching current prices...[0m
+[96m[04:40:09][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[04:40:09][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[92m[04:40:10][SUCCESS] ✅ ETH/USD: 3201.9800000[0m
+[92m[04:40:10][SUCCESS] ✅ XRP/BTC: 0.0000235[0m
+[92m[04:40:10][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[93m[04:40:10][WARNING] ⚠️ Found 12 orders that couldn't be matched to configured pairs:[0m
+[93m[04:40:10][WARNING]    Order OCBLEA-2A3TO-VB2NAW: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3491.44', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3491.44', 'close': ''}[0m
+[93m[04:40:10][WARNING]    Order O3D52Z-R4UKE-NIWKWN: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3443.40', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3443.40', 'close': ''}[0m
+[93m[04:40:10][WARNING]    Order O5VURD-T22WZ-X5DV7T: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3395.35', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3395.35', 'close': ''}[0m
+[93m[04:40:10][WARNING]    Order OEO7SS-7635S-TJ65AR: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3347.30', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3347.30', 'close': ''}[0m
+[93m[04:40:10][WARNING]    Order OYU7XO-FULIE-IA4HYU: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3299.25', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3299.25', 'close': ''}[0m
+[93m[04:40:10][WARNING]    ... and 7 more unmatched orders[0m
+[93m[04:40:10][WARNING] ⚠️ No orders matched to configured pairs! Total open orders: 12[0m
+[96m[04:40:10][INFO]    Looking for pairs: ['XXRPXXBT', 'XETHZUSD'][0m
+[96m[04:40:10][INFO]    First order pair format: 'ETHUSD'[0m
+[96m[04:40:10][INFO] 📊 XRP/BTC: Current orders: 0 buy, 0 sell | Expected: 6 buy, 10 sell[0m
+[96m[04:40:10][INFO] 📊 ETH/USD: Current orders: 0 buy, 0 sell | Expected: 6 buy, 6 sell[0m
+[96m[04:40:10][INFO] 📊 XRP/BTC: 10 sell order(s) filled! Placing 10 new buy order(s)...[0m
+[96m[04:40:10][INFO] 💰 Fetching current balances...[0m
+[96m[04:40:10][INFO] 💰 Current balances:[0m
+[96m[04:40:10][INFO]   DOT28.S: 45.235442[0m
+[96m[04:40:10][INFO]   XETH: 0.032400[0m
+[96m[04:40:10][INFO]   XXBT: 0.000609[0m
+[96m[04:40:10][INFO]   XXRP: 105.945477[0m
+[96m[04:40:10][INFO]   ZUSD: 103.953300[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Failed to place replacement buy orders for XRP/BTC[0m
+[96m[04:40:10][INFO] 📊 XRP/BTC: 6 buy order(s) filled! Placing 6 new sell order(s)...[0m
+[96m[04:40:10][INFO] 💰 Fetching current balances...[0m
+[96m[04:40:10][INFO] 💰 Current balances:[0m
+[96m[04:40:10][INFO]   DOT28.S: 45.235442[0m
+[96m[04:40:10][INFO]   XETH: 0.032400[0m
+[96m[04:40:10][INFO]   XXBT: 0.000609[0m
+[96m[04:40:10][INFO]   XXRP: 105.945477[0m
+[96m[04:40:10][INFO]   ZUSD: 103.953300[0m
+[96m[04:40:10][INFO] 📊 Calculated sell volume for XRP/BTC: 100.65 XRP (from 100.65 available, 1 orders)[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:10][INFO] 📊 Calculated sell volume for XRP/BTC: 100.65 XRP (from 100.65 available, 1 orders)[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:10][INFO] 📊 Calculated sell volume for XRP/BTC: 100.65 XRP (from 100.65 available, 1 orders)[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:10][INFO] 📊 Calculated sell volume for XRP/BTC: 100.65 XRP (from 100.65 available, 1 orders)[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:10][INFO] 📊 Calculated sell volume for XRP/BTC: 100.65 XRP (from 100.65 available, 1 orders)[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:10][INFO] 📊 Calculated sell volume for XRP/BTC: 100.65 XRP (from 100.65 available, 1 orders)[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Failed to place replacement sell orders for XRP/BTC[0m
+[96m[04:40:10][INFO] 📊 XRP/BTC: Need 4 more buy orders (current: 0)[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:10][INFO] 📊 XRP/BTC: Need 4 more sell orders (current: 0)[0m
+[96m[04:40:10][INFO] 📊 Calculated sell volume for XRP/BTC: 25.16 XRP (from 100.65 available, 4 orders)[0m
+[93m[04:40:10][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:11][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:11][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:11][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:11][INFO] 📊 ETH/USD: 6 sell order(s) filled! Placing 6 new buy order(s)...[0m
+[96m[04:40:11][INFO] 💰 Fetching current balances...[0m
+[96m[04:40:11][INFO] 💰 Current balances:[0m
+[96m[04:40:11][INFO]   DOT28.S: 45.235442[0m
+[96m[04:40:11][INFO]   XETH: 0.032400[0m
+[96m[04:40:11][INFO]   XXBT: 0.000609[0m
+[96m[04:40:11][INFO]   XXRP: 105.945477[0m
+[96m[04:40:11][INFO]   ZUSD: 103.953300[0m
+[91m[04:40:11][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:11][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:11][ERROR]    Details: pair=XETHZUSD, price=3153.95, volume=0.030842[0m
+[91m[04:40:11][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:11][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:11][ERROR]    Details: pair=XETHZUSD, price=3105.92, volume=0.030842[0m
+[91m[04:40:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:12][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:12][ERROR]    Details: pair=XETHZUSD, price=3057.89, volume=0.030842[0m
+[91m[04:40:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:12][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:12][ERROR]    Details: pair=XETHZUSD, price=3009.86, volume=0.030842[0m
+[91m[04:40:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:12][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:12][ERROR]    Details: pair=XETHZUSD, price=2961.83, volume=0.030842[0m
+[91m[04:40:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:12][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:12][ERROR]    Details: pair=XETHZUSD, price=2913.8, volume=0.030842[0m
+[93m[04:40:12][WARNING] ⚠️ Failed to place replacement buy orders for ETH/USD[0m
+[96m[04:40:12][INFO] 📊 ETH/USD: 6 buy order(s) filled! Placing 6 new sell order(s)...[0m
+[96m[04:40:12][INFO] 💰 Fetching current balances...[0m
+[96m[04:40:12][INFO] 💰 Current balances:[0m
+[96m[04:40:12][INFO]   DOT28.S: 45.235442[0m
+[96m[04:40:12][INFO]   XETH: 0.032400[0m
+[96m[04:40:12][INFO]   XXBT: 0.000609[0m
+[96m[04:40:12][INFO]   XXRP: 105.945477[0m
+[96m[04:40:12][INFO]   ZUSD: 103.953300[0m
+[96m[04:40:12][INFO] 📊 Calculated sell volume for ETH/USD: 0.030780 ETH (from 0.030780 available, 1 orders)[0m
+[91m[04:40:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:12][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:12][ERROR]    Details: pair=XETHZUSD, price=3250.01, volume=0.03078[0m
+[96m[04:40:12][INFO] 📊 Calculated sell volume for ETH/USD: 0.030780 ETH (from 0.030780 available, 1 orders)[0m
+[91m[04:40:12][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:12][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:12][ERROR]    Details: pair=XETHZUSD, price=3298.04, volume=0.03078[0m
+[96m[04:40:12][INFO] 📊 Calculated sell volume for ETH/USD: 0.030780 ETH (from 0.030780 available, 1 orders)[0m
+[91m[04:40:13][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:13][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:13][ERROR]    Details: pair=XETHZUSD, price=3346.07, volume=0.03078[0m
+[96m[04:40:13][INFO] 📊 Calculated sell volume for ETH/USD: 0.030780 ETH (from 0.030780 available, 1 orders)[0m
+[91m[04:40:13][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:13][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:13][ERROR]    Details: pair=XETHZUSD, price=3394.1, volume=0.03078[0m
+[96m[04:40:13][INFO] 📊 Calculated sell volume for ETH/USD: 0.030780 ETH (from 0.030780 available, 1 orders)[0m
+[91m[04:40:13][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:13][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:13][ERROR]    Details: pair=XETHZUSD, price=3442.13, volume=0.03078[0m
+[96m[04:40:13][INFO] 📊 Calculated sell volume for ETH/USD: 0.030780 ETH (from 0.030780 available, 1 orders)[0m
+[91m[04:40:13][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:13][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:13][ERROR]    Details: pair=XETHZUSD, price=3490.16, volume=0.03078[0m
+[93m[04:40:13][WARNING] ⚠️ Failed to place replacement sell orders for ETH/USD[0m
+[96m[04:40:13][INFO] 📊 ETH/USD: Need 3 more buy orders (current: 0)[0m
+[91m[04:40:13][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:13][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:13][ERROR]    Details: pair=XETHZUSD, price=3153.95, volume=0.010281[0m
+[91m[04:40:13][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:13][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:13][ERROR]    Details: pair=XETHZUSD, price=3105.92, volume=0.010281[0m
+[91m[04:40:14][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:14][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:14][ERROR]    Details: pair=XETHZUSD, price=3057.89, volume=0.010281[0m
+[96m[04:40:14][INFO] 📊 ETH/USD: Need 3 more sell orders (current: 0)[0m
+[96m[04:40:14][INFO] 📊 Calculated sell volume for ETH/USD: 0.010260 ETH (from 0.030780 available, 3 orders)[0m
+[91m[04:40:14][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:14][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:14][ERROR]    Details: pair=XETHZUSD, price=3250.01, volume=0.01026[0m
+[91m[04:40:14][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:14][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:14][ERROR]    Details: pair=XETHZUSD, price=3298.04, volume=0.01026[0m
+[91m[04:40:14][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:14][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:14][ERROR]    Details: pair=XETHZUSD, price=3346.07, volume=0.01026[0m
+[95m[04:40:15][ENHANCED] 📊 GENERATING PnL REPORT...[0m
+[93m[04:40:15][PNL] ============================================================[0m
+[93m[04:40:15][PNL] 📊 GRIDBOT PnL REPORT[0m
+[93m[04:40:15][PNL] ============================================================[0m
+[93m[04:40:15][PNL] 📅 Session Duration: 0:00:12.189479[0m
+[93m[04:40:15][PNL] 🕐 Started: 2025-12-04 04:40:02[0m
+[93m[04:40:15][PNL] 📭 No executions recorded yet[0m
+[93m[04:40:15][PNL] ----------------------------------------[0m
+[96m[04:40:25][INFO] 💰 Fetching current balances...[0m
+[96m[04:40:25][INFO] 💰 Current balances:[0m
+[96m[04:40:25][INFO]   DOT28.S: 45.235442[0m
+[96m[04:40:25][INFO]   XETH: 0.032400[0m
+[96m[04:40:25][INFO]   XXBT: 0.000609[0m
+[96m[04:40:25][INFO]   XXRP: 105.945477[0m
+[96m[04:40:25][INFO]   ZUSD: 103.953300[0m
+[96m[04:40:25][INFO] 📈 Fetching current prices...[0m
+[96m[04:40:25][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[04:40:25][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[92m[04:40:25][SUCCESS] ✅ ETH/USD: 3201.9800000[0m
+[92m[04:40:25][SUCCESS] ✅ XRP/BTC: 0.0000235[0m
+[92m[04:40:25][SUCCESS] ✅ Retrieved prices for 2 pairs[0m
+[93m[04:40:25][WARNING] ⚠️ Found 12 orders that couldn't be matched to configured pairs:[0m
+[93m[04:40:25][WARNING]    Order OCBLEA-2A3TO-VB2NAW: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3491.44', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3491.44', 'close': ''}[0m
+[93m[04:40:25][WARNING]    Order O3D52Z-R4UKE-NIWKWN: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3443.40', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3443.40', 'close': ''}[0m
+[93m[04:40:25][WARNING]    Order O5VURD-T22WZ-X5DV7T: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3395.35', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3395.35', 'close': ''}[0m
+[93m[04:40:25][WARNING]    Order OEO7SS-7635S-TJ65AR: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3347.30', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3347.30', 'close': ''}[0m
+[93m[04:40:25][WARNING]    Order OYU7XO-FULIE-IA4HYU: pair='ETHUSD', desc={'pair': 'ETHUSD', 'aclass': 'forex', 'type': 'sell', 'ordertype': 'limit', 'price': '3299.25', 'price2': '0', 'leverage': 'none', 'order': 'sell 0.00513000 ETHUSD @ limit 3299.25', 'close': ''}[0m
+[93m[04:40:25][WARNING]    ... and 7 more unmatched orders[0m
+[93m[04:40:25][WARNING] ⚠️ No orders matched to configured pairs! Total open orders: 12[0m
+[96m[04:40:25][INFO]    Looking for pairs: ['XXRPXXBT', 'XETHZUSD'][0m
+[96m[04:40:25][INFO]    First order pair format: 'ETHUSD'[0m
+[96m[04:40:25][INFO] 📊 XRP/BTC: Current orders: 0 buy, 0 sell | Expected: 0 buy, 10 sell[0m
+[96m[04:40:25][INFO] 📊 ETH/USD: Current orders: 0 buy, 0 sell | Expected: 0 buy, 6 sell[0m
+[96m[04:40:25][INFO] 📊 XRP/BTC: 10 sell order(s) filled! Placing 10 new buy order(s)...[0m
+[96m[04:40:25][INFO] 💰 Fetching current balances...[0m
+[96m[04:40:25][INFO] 💰 Current balances:[0m
+[96m[04:40:25][INFO]   DOT28.S: 45.235442[0m
+[96m[04:40:25][INFO]   XETH: 0.032400[0m
+[96m[04:40:25][INFO]   XXBT: 0.000609[0m
+[96m[04:40:25][INFO]   XXRP: 105.945477[0m
+[96m[04:40:25][INFO]   ZUSD: 103.953300[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Failed to place replacement buy orders for XRP/BTC[0m
+[96m[04:40:25][INFO] 📊 XRP/BTC: Need 4 more buy orders (current: 0)[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:25][INFO] 📊 XRP/BTC: Need 4 more sell orders (current: 0)[0m
+[96m[04:40:25][INFO] 📊 Calculated sell volume for XRP/BTC: 25.16 XRP (from 100.65 available, 4 orders)[0m
+[93m[04:40:25][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:26][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:26][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[93m[04:40:26][WARNING] ⚠️ Order value too small for XRP/BTC: $0.00 < $10.00[0m
+[96m[04:40:26][INFO] 📊 ETH/USD: 6 sell order(s) filled! Placing 6 new buy order(s)...[0m
+[96m[04:40:26][INFO] 💰 Fetching current balances...[0m
+[96m[04:40:26][INFO] 💰 Current balances:[0m
+[96m[04:40:26][INFO]   DOT28.S: 45.235442[0m
+[96m[04:40:26][INFO]   XETH: 0.032400[0m
+[96m[04:40:26][INFO]   XXBT: 0.000609[0m
+[96m[04:40:26][INFO]   XXRP: 105.945477[0m
+[96m[04:40:26][INFO]   ZUSD: 103.953300[0m
+[91m[04:40:26][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:26][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:26][ERROR]    Details: pair=XETHZUSD, price=3153.95, volume=0.030842[0m
+[91m[04:40:26][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:26][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:26][ERROR]    Details: pair=XETHZUSD, price=3105.92, volume=0.030842[0m
+[91m[04:40:26][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:26][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:26][ERROR]    Details: pair=XETHZUSD, price=3057.89, volume=0.030842[0m
+[91m[04:40:27][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:27][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:27][ERROR]    Details: pair=XETHZUSD, price=3009.86, volume=0.030842[0m
+[91m[04:40:27][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:27][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:27][ERROR]    Details: pair=XETHZUSD, price=2961.83, volume=0.030842[0m
+[91m[04:40:27][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:27][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:27][ERROR]    Details: pair=XETHZUSD, price=2913.8, volume=0.030842[0m
+[93m[04:40:27][WARNING] ⚠️ Failed to place replacement buy orders for ETH/USD[0m
+[96m[04:40:27][INFO] 📊 ETH/USD: Need 3 more buy orders (current: 0)[0m
+[91m[04:40:27][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:27][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:27][ERROR]    Details: pair=XETHZUSD, price=3153.95, volume=0.010281[0m
+[91m[04:40:27][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:27][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:27][ERROR]    Details: pair=XETHZUSD, price=3105.92, volume=0.010281[0m
+[91m[04:40:27][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:27][ERROR] ❌ Failed to place buy order for ETH/USD - API call returned None[0m
+[91m[04:40:27][ERROR]    Details: pair=XETHZUSD, price=3057.89, volume=0.010281[0m
+[96m[04:40:27][INFO] 📊 ETH/USD: Need 3 more sell orders (current: 0)[0m
+[96m[04:40:27][INFO] 📊 Calculated sell volume for ETH/USD: 0.010260 ETH (from 0.030780 available, 3 orders)[0m
+[91m[04:40:28][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:28][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:28][ERROR]    Details: pair=XETHZUSD, price=3250.01, volume=0.01026[0m
+[91m[04:40:28][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:28][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:28][ERROR]    Details: pair=XETHZUSD, price=3298.04, volume=0.01026[0m
+[91m[04:40:28][ERROR] ❌ API error: ['EOrder:Insufficient funds'][0m
+[91m[04:40:28][ERROR] ❌ Failed to place sell order for ETH/USD - API call returned None[0m
+[91m[04:40:28][ERROR]    Details: pair=XETHZUSD, price=3346.07, volume=0.01026[0m

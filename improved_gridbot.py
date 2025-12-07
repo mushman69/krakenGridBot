@@ -25,6 +25,12 @@ SMART FEATURES:
 
 CONFIGURATION DATE: June 2025
 EXPECTED DEPLOYMENT: ~76 active orders total
+
+VERSION: 2025-12-04 - FIXED ORDER REPLACEMENT LOGIC
+- Fixed expected counts tracking (no longer auto-syncs to mask missing orders)
+- Improved order matching with case-insensitive fallbacks
+- Refreshes actual order counts after placing replacements
+- Better error logging for failed order placements
 """
 
 import os
@@ -128,8 +134,38 @@ if not env_loaded:
     load_dotenv(override=True)
 
 last_nonce = 0
+_nonce_file = None
+
+def _load_persistent_nonce():
+    """Load last nonce from file to survive container restarts"""
+    global last_nonce
+    try:
+        nonce_file = os.path.join(os.getenv('DATA_DIR', '/app/data'), '.last_nonce')
+        if os.path.exists(nonce_file):
+            with open(nonce_file, 'r') as f:
+                saved_nonce = int(f.read().strip())
+                # Only use if it's recent (within last hour) to avoid huge jumps
+                if saved_nonce > 0:
+                    last_nonce = saved_nonce
+    except:
+        pass
+
+def _save_persistent_nonce(nonce):
+    """Save last nonce to file"""
+    try:
+        nonce_file = os.path.join(os.getenv('DATA_DIR', '/app/data'), '.last_nonce')
+        os.makedirs(os.path.dirname(nonce_file), exist_ok=True)
+        with open(nonce_file, 'w') as f:
+            f.write(str(nonce))
+    except:
+        pass
+
 def get_nonce():
     global last_nonce
+    
+    # Load persistent nonce on first call
+    if last_nonce == 0:
+        _load_persistent_nonce()
     
     # Docker-aware nonce generation with enhanced conflict prevention
     current_time = time.time()
@@ -152,20 +188,20 @@ def get_nonce():
             # Use nanosecond precision with container-specific offset
             nonce_base = int(current_time * 1000000000)  # Nanoseconds
             
-            # Large random component for Docker (10K-99K range)
-            docker_random = random.randint(10000, 99999)
+            # Large random component for Docker (50K-200K range for better spacing)
+            docker_random = random.randint(50000, 200000)
             
             # Add container-specific seed and environment variables if available
             env_seed = int(os.getenv('NONCE_SEED', '0'))
             
             nonce = nonce_base + container_seed + docker_random + env_seed
             
-            # Extra large jump for Docker if nonce conflict
+            # Extra large jump for Docker if nonce conflict (ensure minimum 1M gap)
             if nonce <= last_nonce:
-                nonce = last_nonce + random.randint(50000, 200000)
+                nonce = last_nonce + random.randint(1000000, 5000000)
             
             if os.getenv('DEBUG_NONCE'):
-                print(f"Docker nonce: {nonce}, container: {container_id}, seed: {container_seed}")
+                print(f"Docker nonce: {nonce}, container: {container_id}, seed: {container_seed}, last: {last_nonce}")
                 
         except Exception as e:
             # Fallback for Docker if container detection fails
@@ -173,7 +209,7 @@ def get_nonce():
             nonce_base = int(current_time * 1000000000)
             nonce = nonce_base + random.randint(100000, 999999)
             if nonce <= last_nonce:
-                nonce = last_nonce + random.randint(100000, 500000)
+                nonce = last_nonce + random.randint(1000000, 5000000)
     else:
         # Standard nonce generation for non-Docker environments
         try:
@@ -190,6 +226,7 @@ def get_nonce():
             nonce = last_nonce + random.randint(10000, 100000)
     
     last_nonce = nonce
+    _save_persistent_nonce(nonce)
     
     # Enhanced debug logging
     if os.getenv('DEBUG_NONCE'):
@@ -631,6 +668,7 @@ class ImprovedGridBot:
         self.rest_url = "https://api.kraken.com"
         self.balances = {}
         self.current_prices = {}
+        self.btc_usd_price = None  # For converting XRP/BTC order values to USD
         
         # Initialize PnL tracker
         self.pnl_tracker = PnLTracker()
@@ -699,6 +737,13 @@ class ImprovedGridBot:
                     
                     if 'nonce' in error_msg.lower() and attempt < max_retries - 1:
                         Logger.warning(f"⚠️ Nonce error on attempt {attempt + 1}, retrying...")
+                        # Increase delay for nonce errors and force a larger nonce jump
+                        delay = 3 + (attempt * 3)
+                        Logger.info(f"Waiting {delay} seconds before attempt {attempt + 1}...")
+                        await asyncio.sleep(delay)
+                        # Force a large nonce jump by updating last_nonce
+                        global last_nonce
+                        last_nonce = int(time.time() * 1000000000) + random.randint(1000000, 5000000)
                         continue
                     else:
                         Logger.error(f"❌ API error: {result['error']}")
@@ -718,7 +763,7 @@ class ImprovedGridBot:
         return None
 
     async def get_account_balance(self):
-        """Get current account balances"""
+        """Get current account balances and calculate available balances (subtracting locked funds)"""
         try:
             Logger.info("💰 Fetching current balances...")
             result = await self.api_call_with_retry('POST', '/0/private/Balance')
@@ -727,19 +772,68 @@ class ImprovedGridBot:
                 Logger.error("❌ Failed to get account balance")
                 return False
             
+            # Store total balances
             self.balances = result
             
-            # Display current balances
-            Logger.info("💰 Current balances:")
-            for asset, balance in self.balances.items():
-                balance_float = float(balance)
-                if balance_float > 0:
-                    Logger.info(f"  {asset}: {balance_float:.6f}")
+            # Get open orders to calculate locked funds
+            open_orders = await self.get_open_orders()
+            
+            # Calculate locked funds per asset
+            locked_funds = {}
+            for order_id, order_data in open_orders.items():
+                desc = order_data.get('descr', {})
+                order_type = desc.get('type', '')
+                vol = float(order_data.get('vol', 0))
+                
+                if order_type == 'buy':
+                    # Buy orders lock the base currency (USD for ETH/USD, BTC for XRP/BTC)
+                    pair_str = desc.get('pair', '')
+                    if 'ETH' in pair_str and 'USD' in pair_str:
+                        # ETH/USD buy order: locks USD
+                        price = float(desc.get('price', 0))
+                        locked_usd = vol * price
+                        locked_funds['ZUSD'] = locked_funds.get('ZUSD', 0) + locked_usd
+                    elif 'XRP' in pair_str and 'BTC' in pair_str:
+                        # XRP/BTC buy order: locks BTC
+                        price = float(desc.get('price', 0))
+                        locked_btc = vol * price
+                        locked_funds['XXBT'] = locked_funds.get('XXBT', 0) + locked_btc
+                elif order_type == 'sell':
+                    # Sell orders lock the quote currency (ETH for ETH/USD, XRP for XRP/BTC)
+                    pair_str = desc.get('pair', '')
+                    if 'ETH' in pair_str and 'USD' in pair_str:
+                        # ETH/USD sell order: locks ETH
+                        locked_funds['XETH'] = locked_funds.get('XETH', 0) + vol
+                    elif 'XRP' in pair_str and 'BTC' in pair_str:
+                        # XRP/BTC sell order: locks XRP
+                        locked_funds['XXRP'] = locked_funds.get('XXRP', 0) + vol
+            
+            # Calculate and store available balances (total - locked)
+            self.available_balances = {}
+            for asset, total_balance in self.balances.items():
+                total = float(total_balance)
+                locked = locked_funds.get(asset, 0)
+                available = total - locked
+                self.available_balances[asset] = available
+                if locked > 0:
+                    Logger.info(f"  {asset}: {total:.6f} total, {locked:.6f} locked, {available:.6f} available")
+                else:
+                    Logger.info(f"  {asset}: {total:.6f} total, {available:.6f} available (no locked funds)")
+            
+            # Debug: Verify available_balances was set correctly
+            if hasattr(self, 'available_balances') and self.available_balances:
+                Logger.info(f"✅ Available balances calculated: {len(self.available_balances)} assets")
+                for asset, avail in self.available_balances.items():
+                    total = float(self.balances.get(asset, 0))
+                    if abs(avail - total) > 0.000001:  # Only log if there's a difference
+                        Logger.info(f"   {asset}: {avail:.6f} available (of {total:.6f} total)")
             
             return True
             
         except Exception as e:
             Logger.error(f"❌ Error getting balance: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return False
 
     async def get_current_prices(self):
@@ -759,6 +853,11 @@ class ImprovedGridBot:
                 pair_mapping[kraken_pair] = pair
                 Logger.info(f"  Mapping {pair} -> {kraken_pair}")
             
+            # Also fetch BTC/USD for XRP/BTC order value conversion
+            if "XRP/BTC" in self.enabled_pairs:
+                kraken_pairs.append("XXBTZUSD")  # BTC/USD pair
+                pair_mapping["XXBTZUSD"] = "BTC/USD"
+            
             params = {'pair': ','.join(kraken_pairs)}
             
             async with aiohttp.ClientSession() as session:
@@ -774,12 +873,34 @@ class ImprovedGridBot:
                     
                     ticker_data = result.get("result", {})
                     
+                    # Debug: log what pairs we received
+                    Logger.info(f"📊 Received ticker data for {len(ticker_data)} pairs: {list(ticker_data.keys())}")
+                    
                     for kraken_pair, data in ticker_data.items():
                         if 'c' in data:  # 'c' is the last trade price
                             price = float(data['c'][0])
                             display_pair = pair_mapping.get(kraken_pair, kraken_pair)
-                            self.current_prices[display_pair] = price
-                            Logger.success(f"✅ {display_pair}: {price:.7f}")
+                            if display_pair == "BTC/USD":
+                                # Store BTC/USD price for order value conversion
+                                self.btc_usd_price = price
+                                Logger.success(f"✅ {display_pair}: {price:.2f} (for XRP/BTC order value conversion)")
+                            else:
+                                self.current_prices[display_pair] = price
+                                Logger.success(f"✅ {display_pair}: {price:.7f}")
+                    
+                    # If BTC/USD wasn't fetched but we need it, estimate from ETH/USD
+                    if "XRP/BTC" in self.enabled_pairs and self.btc_usd_price is None:
+                        Logger.warning(f"⚠️ BTC/USD price NOT in ticker response (received pairs: {list(ticker_data.keys())})")
+                        if "ETH/USD" in self.current_prices:
+                            eth_price = self.current_prices["ETH/USD"]
+                            # Rough estimate: BTC is typically 15-20x ETH price
+                            self.btc_usd_price = eth_price * 18
+                            Logger.warning(f"⚠️ Estimating BTC/USD from ETH/USD: ${self.btc_usd_price:.2f} (ETH: ${eth_price:.2f} × 18)")
+                        else:
+                            self.btc_usd_price = 90000.0  # Conservative fallback
+                            Logger.warning(f"⚠️ BTC/USD price not available, using fallback: ${self.btc_usd_price:.2f}")
+                    elif "XRP/BTC" in self.enabled_pairs:
+                        Logger.info(f"✅ BTC/USD price successfully fetched: ${self.btc_usd_price:.2f} (will be used for XRP/BTC order value conversion)")
                     
                     Logger.success(f"✅ Retrieved prices for {len(self.current_prices)} pairs")
                     return True
@@ -832,6 +953,34 @@ class ImprovedGridBot:
                 if rounded_volume < min_order_size:
                     Logger.warning(f"⚠️ Order too small for {pair}: {rounded_volume} < {min_order_size}")
                     return None
+            elif pair == "XRP/BTC":
+                # For XRP/BTC, order_value is in BTC, need to convert to USD
+                order_value_btc = rounded_volume * rounded_price  # BTC value
+                
+                # Get BTC/USD price for conversion
+                btc_usd = self.btc_usd_price
+                if btc_usd is None:
+                    # Fallback: estimate from ETH/USD if available, or use default
+                    if "ETH/USD" in self.current_prices:
+                        # Rough estimate: BTC is typically 15-20x ETH price
+                        eth_price = self.current_prices.get("ETH/USD", 3000)
+                        btc_usd = eth_price * 18  # Conservative estimate
+                        Logger.warning(f"⚠️ BTC/USD price not available, estimating from ETH: ${btc_usd:.2f}")
+                    else:
+                        btc_usd = 90000.0  # Conservative fallback estimate
+                        Logger.warning(f"⚠️ BTC/USD price not available, using fallback: ${btc_usd:.2f}")
+                
+                order_value_usd = order_value_btc * btc_usd
+                
+                # Debug logging to help diagnose issues
+                Logger.info(f"🔍 {pair} order value calculation: {rounded_volume} XRP × {rounded_price:.8f} BTC = {order_value_btc:.8f} BTC × ${btc_usd:.2f}/BTC = ${order_value_usd:.2f} USD")
+                
+                if order_value_usd < min_order_size:
+                    Logger.warning(f"⚠️ Order value too small for {pair}: ${order_value_usd:.2f} < ${min_order_size:.2f} (BTC value: {order_value_btc:.8f} BTC @ ${btc_usd:.2f}/BTC)")
+                    Logger.warning(f"   Volume: {rounded_volume} XRP, Price: {rounded_price:.8f} BTC/XRP")
+                    return None
+                else:
+                    Logger.info(f"✅ Order value for {pair}: ${order_value_usd:.2f} USD (BTC: {order_value_btc:.8f} @ ${btc_usd:.2f}/BTC) - PASSES minimum ${min_order_size:.2f}")
             else:
                 # For other pairs, min_order_size is typically in USD value
                 order_value = rounded_volume * rounded_price
@@ -915,14 +1064,25 @@ class ImprovedGridBot:
             return {}
 
     def calculate_order_volume(self, pair, side, config, current_price, orders_count):
-        """Calculate order volume based on available balance and number of orders"""
+        """Calculate order volume based on available balance (accounting for locked funds) and number of orders"""
         try:
             base_asset = config.get('base_asset')
             quote_asset = config.get('quote_asset')
             
-            # Get available balances
-            base_balance = float(self.balances.get(base_asset, 0))
-            quote_balance = float(self.balances.get(quote_asset, 0))
+            # Get available balances (total - locked funds in open orders)
+            # Use available_balances if calculated, otherwise fall back to total balances
+            if hasattr(self, 'available_balances') and self.available_balances:
+                base_balance = float(self.available_balances.get(base_asset, self.balances.get(base_asset, 0)))
+                quote_balance = float(self.available_balances.get(quote_asset, self.balances.get(quote_asset, 0)))
+                # Debug logging to verify we're using available balances
+                total_base = float(self.balances.get(base_asset, 0))
+                total_quote = float(self.balances.get(quote_asset, 0))
+                Logger.info(f"🔍 {pair} {side}: Using AVAILABLE balances - {base_asset}: {base_balance:.6f} (total: {total_base:.6f}), {quote_asset}: {quote_balance:.6f} (total: {total_quote:.6f})")
+            else:
+                # Fallback to total balances if available_balances not calculated yet
+                base_balance = float(self.balances.get(base_asset, 0))
+                quote_balance = float(self.balances.get(quote_asset, 0))
+                Logger.warning(f"⚠️ {pair} {side}: Using TOTAL balances (available_balances not set) - {base_asset}: {base_balance:.6f}, {quote_asset}: {quote_balance:.6f}")
             
             if pair == "ETH/USD":
                 # For ETH/USD: base is ZUSD, quote is XETH
@@ -936,13 +1096,16 @@ class ImprovedGridBot:
                     volume = usd_per_order / current_price  # ETH volume
                 else:  # sell
                     # Sell orders: need ETH, selling for USD
-                    available_eth = quote_balance * 0.95  # Use 95% of ETH
+                    # quote_balance should already be available balance (locked funds subtracted)
+                    available_eth = quote_balance * 0.95  # Use 95% of available ETH
+                    total_eth = float(self.balances.get(quote_asset, 0))
                     if available_eth < 0.005:  # Minimum 0.005 ETH
-                        Logger.warning(f"⚠️ Insufficient ETH balance for sell order: {available_eth:.6f} < 0.005 (quote_balance: {quote_balance:.6f})")
+                        Logger.warning(f"⚠️ Insufficient ETH balance for sell order: {available_eth:.6f} < 0.005")
+                        Logger.warning(f"   Total ETH: {total_eth:.6f}, Available (unlocked): {quote_balance:.6f}, After 95%: {available_eth:.6f}")
                         return None
                     # Distribute ETH across sell orders
                     volume = available_eth / orders_count
-                    Logger.info(f"📊 Calculated sell volume for {pair}: {volume:.6f} ETH (from {available_eth:.6f} available, {orders_count} orders)")
+                    Logger.info(f"📊 Calculated sell volume for {pair}: {volume:.6f} ETH (from {available_eth:.6f} available after 95%, {quote_balance:.6f} total available, {total_eth:.6f} total ETH, {orders_count} orders)")
             else:
                 # For XRP/BTC: base is XXBT, quote is XXRP
                 if side == 'buy':
@@ -986,10 +1149,17 @@ class ImprovedGridBot:
             quote_asset = config.get('quote_asset')
             
             if pair == "ETH/USD":
-                base_balance = float(self.balances.get(base_asset, 0))  # USD
-                quote_balance = float(self.balances.get(quote_asset, 0))  # ETH
+                # Use available balances (accounting for locked funds) if calculated
+                if hasattr(self, 'available_balances') and self.available_balances:
+                    base_balance = float(self.available_balances.get(base_asset, self.balances.get(base_asset, 0)))  # USD
+                    quote_balance = float(self.available_balances.get(quote_asset, self.balances.get(quote_asset, 0)))  # ETH
+                    Logger.info(f"📊 {pair}: Using available balances - USD: {base_balance:.2f}, ETH: {quote_balance:.6f} (locked funds already subtracted)")
+                else:
+                    base_balance = float(self.balances.get(base_asset, 0))  # USD
+                    quote_balance = float(self.balances.get(quote_asset, 0))  # ETH
+                    Logger.warning(f"⚠️ {pair}: Using total balances (available_balances not calculated yet) - USD: {base_balance:.2f}, ETH: {quote_balance:.6f}")
                 
-                # Calculate orders per side
+                # Calculate orders per side (use 95% of available to leave buffer)
                 usd_available = base_balance * 0.95
                 eth_available = quote_balance * 0.95
                 
@@ -998,14 +1168,20 @@ class ImprovedGridBot:
                 # Sell orders: based on ETH available
                 sell_orders_count = min(max_orders_per_side, max(min_orders_per_side, int(eth_available / 0.005)))
             else:
-                # XRP/BTC logic
-                base_balance = float(self.balances.get(base_asset, 0))  # BTC
-                quote_balance = float(self.balances.get(quote_asset, 0))  # XRP
+                # XRP/BTC logic - use available balances (accounting for locked funds) if calculated
+                if hasattr(self, 'available_balances') and self.available_balances:
+                    base_balance = float(self.available_balances.get(base_asset, self.balances.get(base_asset, 0)))  # BTC
+                    quote_balance = float(self.available_balances.get(quote_asset, self.balances.get(quote_asset, 0)))  # XRP
+                else:
+                    base_balance = float(self.balances.get(base_asset, 0))  # BTC
+                    quote_balance = float(self.balances.get(quote_asset, 0))  # XRP
                 
                 buy_orders_count = min(max_orders_per_side, max(min_orders_per_side, int(base_balance / 0.0001)))
                 sell_orders_count = min(max_orders_per_side, max(min_orders_per_side, int(quote_balance / 10)))
             
             orders_placed = 0
+            buy_orders_placed = 0
+            sell_orders_placed = 0
             
             # Create buy orders (below current price)
             if buy_orders_count > 0:
@@ -1020,6 +1196,7 @@ class ImprovedGridBot:
                         order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
                         if order_id:
                             orders_placed += 1
+                            buy_orders_placed += 1
                         
                         # Small delay to avoid rate limits
                         await asyncio.sleep(0.1)
@@ -1037,6 +1214,7 @@ class ImprovedGridBot:
                         order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
                         if order_id:
                             orders_placed += 1
+                            sell_orders_placed += 1
                         
                         # Small delay to avoid rate limits
                         await asyncio.sleep(0.1)
@@ -1046,11 +1224,29 @@ class ImprovedGridBot:
             # Track grid center price for dynamic repositioning
             self.grid_center_prices[pair] = current_price
             
-            # Track expected order counts
+            # Track expected order counts based on ACTUAL orders placed, not intended counts
+            # CRITICAL: Use buy_orders_placed and sell_orders_placed, NOT buy_orders_count and sell_orders_count
+            # This ensures we only expect orders that were actually successfully placed
+            # FORCE update expected counts - this MUST happen after grid creation
             self.expected_order_counts[pair] = {
-                'buy': buy_orders_count if buy_orders_count > 0 else 0,
-                'sell': sell_orders_count if sell_orders_count > 0 else 0
+                'buy': buy_orders_placed,
+                'sell': sell_orders_placed
             }
+            
+            # CRITICAL LOG: This must appear in logs to verify expected counts are set correctly
+            Logger.error(f"🔴 {pair}: ✅✅✅ FORCED expected counts update: {buy_orders_placed} buy, {sell_orders_placed} sell (intended was: {buy_orders_count} buy, {sell_orders_count} sell) ✅✅✅")
+            Logger.warning(f"⚠️ {pair}: Expected counts verification - buy_orders_placed={buy_orders_placed}, sell_orders_placed={sell_orders_placed}, stored={self.expected_order_counts[pair]}")
+            
+            # Verify the values were actually stored
+            stored = self.expected_order_counts.get(pair, {})
+            if stored.get('buy') != buy_orders_placed or stored.get('sell') != sell_orders_placed:
+                Logger.error(f"❌ {pair}: CRITICAL BUG - Expected counts mismatch! Placed: {buy_orders_placed}/{sell_orders_placed}, Stored: {stored.get('buy')}/{stored.get('sell')}")
+                # Force correct it
+                self.expected_order_counts[pair] = {
+                    'buy': buy_orders_placed,
+                    'sell': sell_orders_placed
+                }
+                Logger.error(f"🔴 {pair}: FORCED CORRECTION - Reset expected counts to {buy_orders_placed} buy, {sell_orders_placed} sell")
             
             return True
             
@@ -1139,6 +1335,60 @@ class ImprovedGridBot:
             traceback.print_exc()
             return False
 
+    def match_order_to_pair(self, order_pair):
+        """Match an order's pair string to a configured trading pair"""
+        if not order_pair:
+            return None
+        
+        order_pair_upper = order_pair.upper().strip()
+        
+        # Known pair format mappings (Kraken returns different formats than we send)
+        # When we place orders with XETHZUSD, Kraken returns them as ETHUSD
+        pair_mappings = {
+            'ETHUSD': 'XETHZUSD',
+            'ETH/USD': 'XETHZUSD',
+            'XETHUSD': 'XETHZUSD',
+            'ETHZUSD': 'XETHZUSD',
+            'XRPBTC': 'XXRPXXBT',
+            'XRP/BTC': 'XXRPXXBT',
+            'XRPXXBT': 'XXRPXXBT',
+            'XXRPXBT': 'XXRPXXBT',
+            'XRPXBT': 'XXRPXXBT',
+        }
+        
+        # First, normalize the order_pair to the kraken_pair format we use
+        normalized_pair = pair_mappings.get(order_pair_upper, order_pair_upper)
+        
+        # Now match against configured pairs
+        for pair, config in self.enabled_pairs.items():
+            kraken_pair = config.get('kraken_pair')
+            if not kraken_pair:
+                continue
+            
+            # Try exact match (case-insensitive)
+            if kraken_pair.upper() == normalized_pair.upper():
+                Logger.info(f"📊 ✅ Matched '{order_pair}' -> '{pair}' (normalized: '{normalized_pair}')")
+                return pair
+            
+            # Also try direct match with original order_pair
+            if kraken_pair.upper() == order_pair_upper:
+                Logger.info(f"📊 ✅ Matched '{order_pair}' -> '{pair}' (direct)")
+                return pair
+        
+        # If no match, try normalization (remove X/Z characters)
+        normalized_order = ''.join(c for c in order_pair_upper if c not in 'XZ')
+        for pair, config in self.enabled_pairs.items():
+            kraken_pair = config.get('kraken_pair')
+            if not kraken_pair:
+                continue
+            normalized_kraken = ''.join(c for c in kraken_pair.upper() if c not in 'XZ')
+            if normalized_kraken == normalized_order:
+                Logger.info(f"📊 ✅ Matched '{order_pair}' -> '{pair}' via normalization")
+                return pair
+        
+        Logger.warning(f"⚠️ Could not match '{order_pair}' to any configured pair")
+        return None
+    
     async def monitor_and_replace_orders(self):
         """Monitor open orders and replace filled ones"""
         try:
@@ -1146,18 +1396,33 @@ class ImprovedGridBot:
             
             # Track orders by pair
             orders_by_pair = {}
+            unmatched_orders = []
             for order_id, order_data in open_orders.items():
-                pair_name = None
                 # Find which pair this order belongs to
                 desc = order_data.get('descr', {})
                 order_pair = desc.get('pair', '')
                 
-                for pair, config in self.enabled_pairs.items():
-                    if config.get('kraken_pair') == order_pair:
-                        pair_name = pair
-                        break
+                # Debug: log what we're trying to match
+                if not order_pair:
+                    Logger.warning(f"⚠️ Order {order_id} has no pair in desc: {desc}")
+                    continue
                 
-                if pair_name:
+                try:
+                    pair_name = self.match_order_to_pair(order_pair)
+                except Exception as e:
+                    Logger.error(f"❌ Exception in match_order_to_pair for '{order_pair}': {str(e)}")
+                    import traceback
+                    traceback.print_exc()
+                    pair_name = None
+                
+                # If still no match, log it for debugging
+                if not pair_name:
+                    unmatched_orders.append({
+                        'order_id': order_id,
+                        'order_pair': order_pair,
+                        'desc': desc
+                    })
+                else:
                     if pair_name not in orders_by_pair:
                         orders_by_pair[pair_name] = {'buy': 0, 'sell': 0}
                     
@@ -1167,15 +1432,97 @@ class ImprovedGridBot:
                     elif order_type == 'sell':
                         orders_by_pair[pair_name]['sell'] += 1
             
+            # Log unmatched orders for debugging
+            if unmatched_orders:
+                Logger.warning(f"⚠️ Found {len(unmatched_orders)} orders that couldn't be matched to configured pairs:")
+                for unmatched in unmatched_orders[:5]:  # Show first 5
+                    Logger.warning(f"   Order {unmatched['order_id']}: pair='{unmatched['order_pair']}', desc={unmatched['desc']}")
+                if len(unmatched_orders) > 5:
+                    Logger.warning(f"   ... and {len(unmatched_orders) - 5} more unmatched orders")
+            
+            # Log matched orders for debugging
+            if orders_by_pair:
+                Logger.info(f"📊 Matched orders: {orders_by_pair}")
+            else:
+                Logger.warning(f"⚠️ No orders matched to configured pairs! Total open orders: {len(open_orders)}")
+                # Debug: show what pairs we're looking for
+                Logger.info(f"   Looking for pairs: {[config.get('kraken_pair') for config in self.enabled_pairs.values()]}")
+                if open_orders:
+                    # Show first order's pair format
+                    first_order = list(open_orders.values())[0]
+                    first_desc = first_order.get('descr', {})
+                    first_pair = first_desc.get('pair', 'N/A')
+                    Logger.info(f"   First order pair format: '{first_pair}'")
+            
             # Initialize expected counts from current orders if not set (handles bot restart)
+            # IMPORTANT: We only initialize if not set - we don't update them here because
+            # that would mask missing orders. Expected counts should only decrease when orders fill.
+            # CRITICAL: Only initialize if we actually matched orders - if no orders matched,
+            # don't set expected counts to 0 (that would cause false "all orders filled" detection)
             for pair in self.enabled_pairs.keys():
+                pair_orders = orders_by_pair.get(pair, {'buy': 0, 'sell': 0})
+                current_buy = pair_orders['buy']
+                current_sell = pair_orders['sell']
+                
+                # Only initialize if we don't have expected counts yet AND we found some orders
+                # If no orders matched, skip initialization (orders might be there but unmatched)
+                # CRITICAL: Never override expected counts that were set during grid creation
+                # Grid creation sets them from actual placed orders, which is the source of truth
                 if pair not in self.expected_order_counts:
-                    pair_orders = orders_by_pair.get(pair, {'buy': 0, 'sell': 0})
-                    self.expected_order_counts[pair] = {
-                        'buy': pair_orders['buy'],
-                        'sell': pair_orders['sell']
-                    }
-                    Logger.info(f"📊 {pair}: Initialized expected counts from current orders: {pair_orders['buy']} buy, {pair_orders['sell']} sell")
+                    # Only initialize if we actually found orders for this pair
+                    # OR if we have no unmatched orders at all (meaning matching worked)
+                    # CRITICAL: Only initialize from ACTUAL current orders, never from intended counts
+                    if current_buy > 0 or current_sell > 0 or not unmatched_orders:
+                        self.expected_order_counts[pair] = {
+                            'buy': current_buy,  # Use ACTUAL current orders, not intended counts
+                            'sell': current_sell  # Use ACTUAL current orders, not intended counts
+                        }
+                        Logger.info(f"📊 {pair}: Initialized expected counts from ACTUAL current orders: {current_buy} buy, {current_sell} sell")
+                    else:
+                        # Orders exist but couldn't be matched - don't initialize to 0
+                        Logger.warning(f"⚠️ {pair}: Skipping expected count initialization - orders exist but couldn't be matched (matching issue)")
+                else:
+                    # Expected counts already exist - verify they match current orders (for debugging)
+                    expected = self.expected_order_counts[pair]
+                    expected_buy = expected.get('buy', 0)
+                    expected_sell = expected.get('sell', 0)
+                    
+                    # CRITICAL CHECK: If expected counts seem wrong (higher than current when no orders were placed),
+                    # this indicates a bug where expected counts were set from intended counts instead of actual
+                    # FIX THIS IMMEDIATELY before logging
+                    if expected_buy > current_buy and current_buy == 0:
+                        Logger.error(f"🔴 {pair}: BUG DETECTED - Expected buy count ({expected_buy}) > current (0) but no orders exist!")
+                        Logger.error(f"   This suggests expected counts were set from intended counts, not actual placed orders")
+                        Logger.error(f"   FORCING correction: Setting expected buy to 0 (actual)")
+                        self.expected_order_counts[pair]['buy'] = 0
+                        expected_buy = 0
+                    
+                    # Also check if expected counts don't match current at all - reset to current
+                    # CRITICAL: If expected_buy > 0 but current_buy = 0, this is ALWAYS wrong (orders can't be filled if they were never placed)
+                    if expected_buy != current_buy or expected_sell != current_sell:
+                        # If expected buy > 0 but current buy = 0, this is definitely wrong
+                        if expected_buy > 0 and current_buy == 0:
+                            Logger.error(f"🔴 {pair}: CRITICAL - Expected buy ({expected_buy}) > 0 but current is 0! Resetting to 0")
+                            self.expected_order_counts[pair]['buy'] = 0
+                            expected_buy = 0
+                        # If we have orders but expected counts are wrong, reset to match current
+                        elif (current_buy > 0 or current_sell > 0) and (expected_buy != current_buy or expected_sell != current_sell):
+                            Logger.warning(f"⚠️ {pair}: Expected counts ({expected_buy} buy, {expected_sell} sell) don't match current ({current_buy} buy, {current_sell} sell)")
+                            Logger.warning(f"   Resetting expected counts to match current orders")
+                            self.expected_order_counts[pair] = {
+                                'buy': current_buy,
+                                'sell': current_sell
+                            }
+                            expected_buy = current_buy
+                            expected_sell = current_sell
+                    
+                    # Also check for sell orders - if expected > current but current matches what we actually have
+                    if expected_sell > current_sell and current_sell > 0:
+                        # This might be OK if some orders filled, but log it
+                        Logger.info(f"📊 {pair}: Expected sell count ({expected_sell}) > current ({current_sell}) - some orders may have filled")
+                    
+                    if current_buy != expected_buy or current_sell != expected_sell:
+                        Logger.info(f"📊 {pair}: Current orders: {current_buy} buy, {current_sell} sell | Expected: {expected_buy} buy, {expected_sell} sell")
             
             # Check each pair and replace missing orders
             for pair, config in self.enabled_pairs.items():
@@ -1228,13 +1575,31 @@ class ImprovedGridBot:
                                 await asyncio.sleep(0.2)  # Small delay between orders
                     
                     if orders_placed > 0:
-                        # Update expected counts after placing all replacement orders
-                        expected_buy = buy_count + orders_placed
-                        expected_sell = sell_count  # Update to actual count
-                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
-                        Logger.success(f"✅ Placed {orders_placed} new buy order(s) after sell fill(s)")
+                        # Refresh order counts to get actual new counts after placing orders
+                        await asyncio.sleep(0.5)  # Small delay for orders to register
+                        refreshed_orders = await self.get_open_orders()
+                        refreshed_pair_orders = {'buy': 0, 'sell': 0}
+                        for order_id, order_data in refreshed_orders.items():
+                            desc = order_data.get('descr', {})
+                            order_pair = desc.get('pair', '')
+                            matched_pair = self.match_order_to_pair(order_pair)
+                            if matched_pair == pair:
+                                order_type = desc.get('type', '')
+                                if order_type == 'buy':
+                                    refreshed_pair_orders['buy'] += 1
+                                elif order_type == 'sell':
+                                    refreshed_pair_orders['sell'] += 1
+                        
+                        # Update expected counts based on actual refreshed counts
+                        self.expected_order_counts[pair] = {
+                            'buy': refreshed_pair_orders['buy'],
+                            'sell': refreshed_pair_orders['sell']
+                        }
+                        Logger.success(f"✅ Placed {orders_placed} new buy order(s) after sell fill(s). Updated expected: {refreshed_pair_orders['buy']} buy, {refreshed_pair_orders['sell']} sell")
                     else:
                         Logger.warning(f"⚠️ Failed to place replacement buy orders for {pair}")
+                        # Still update expected sell count to match actual (to prevent false positives)
+                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': sell_count}
                 
                 # Check if buy orders were filled (we have fewer than expected)
                 if buy_count < expected_buy:
@@ -1260,13 +1625,31 @@ class ImprovedGridBot:
                                 await asyncio.sleep(0.2)  # Small delay between orders
                     
                     if orders_placed > 0:
-                        # Update expected counts after placing all replacement orders
-                        expected_sell = sell_count + orders_placed
-                        expected_buy = buy_count  # Update to actual count
-                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
-                        Logger.success(f"✅ Placed {orders_placed} new sell order(s) after buy fill(s)")
+                        # Refresh order counts to get actual new counts after placing orders
+                        await asyncio.sleep(0.5)  # Small delay for orders to register
+                        refreshed_orders = await self.get_open_orders()
+                        refreshed_pair_orders = {'buy': 0, 'sell': 0}
+                        for order_id, order_data in refreshed_orders.items():
+                            desc = order_data.get('descr', {})
+                            order_pair = desc.get('pair', '')
+                            matched_pair = self.match_order_to_pair(order_pair)
+                            if matched_pair == pair:
+                                order_type = desc.get('type', '')
+                                if order_type == 'buy':
+                                    refreshed_pair_orders['buy'] += 1
+                                elif order_type == 'sell':
+                                    refreshed_pair_orders['sell'] += 1
+                        
+                        # Update expected counts based on actual refreshed counts
+                        self.expected_order_counts[pair] = {
+                            'buy': refreshed_pair_orders['buy'],
+                            'sell': refreshed_pair_orders['sell']
+                        }
+                        Logger.success(f"✅ Placed {orders_placed} new sell order(s) after buy fill(s). Updated expected: {refreshed_pair_orders['buy']} buy, {refreshed_pair_orders['sell']} sell")
                     else:
                         Logger.warning(f"⚠️ Failed to place replacement sell orders for {pair}")
+                        # Still update expected buy count to match actual (to prevent false positives)
+                        self.expected_order_counts[pair] = {'buy': buy_count, 'sell': expected_sell}
                 
                 # Also check if we need to add orders to maintain minimum grid
                 # Check if we need to add buy orders

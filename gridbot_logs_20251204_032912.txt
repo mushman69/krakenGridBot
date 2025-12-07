@@ -1,0 +1,153 @@
+GridBot Logs Export
+Container: kraken_gridbot_pnl
+Exported: 2025-12-04 03:29:12
+================================================================================
+
+🐳 Starting GridBot Docker Container...
+⏰ Checking container time synchronization...
+🕐 Container time: Thu Dec  4 03:28:48 UTC 2025
+🕐 UTC time: Thu Dec  4 03:28:48 UTC 2025
+⏳ Adding 8s startup delay to prevent nonce conflicts...
+✅ API credentials found
+🔢 Nonce seed: 1764818944153
+🚀 Starting GridBot application...
+[95m[03:28:56][ENHANCED] 🚀 AGGRESSIVE GRIDBOT - OPTIMIZED FOR ALTCOIN CYCLE[0m
+[93m[03:28:56][WARNING] ⚠️  AGGRESSIVE STRATEGY DEPLOYMENT:[0m
+[93m[03:28:56][WARNING] 1. Cancel ALL existing orders[0m
+[93m[03:28:56][WARNING] 2. Deploy XRP/BTC (60%) + ETH/USD (40%) aggressive allocation[0m
+[93m[03:28:56][WARNING] 3. Place dense grid orders for maximum capture[0m
+[93m[03:28:56][WARNING] 4. Monitor and replace executed orders aggressively[0m
+[93m[03:28:56][WARNING] 5. Smart rebalancing - protects trending assets[0m
+[95m[03:28:56][ENHANCED] 🎯 AGGRESSIVE PAIRS: XRP/BTC, ETH/USD[0m
+[95m[03:28:56][ENHANCED] 📊 CONFIGURATION SUMMARY:[0m
+[96m[03:28:56][INFO]   XRP/BTC: 2.5% spacing, 60.0% allocation, 20 orders/side 🎪 CYCLE[0m
+[96m[03:28:56][INFO]     Startup rebalance: ✅ YES[0m
+[96m[03:28:56][INFO]   ETH/USD: 1.5% spacing, 40.0% allocation, 18 orders/side 🏛️ STABLE[0m
+[96m[03:28:56][INFO]     Startup rebalance: ✅ YES[0m
+[95m[03:28:56][ENHANCED] 🧠 SMART REBALANCING SETTINGS:[0m
+[96m[03:28:56][INFO] Auto-rebalancing: ❌ DISABLED[0m
+[96m[03:28:56][INFO] Per-pair startup rebalancing:[0m
+[96m[03:28:56][INFO]   XRP/BTC: ✅ ENABLED[0m
+[96m[03:28:56][INFO]   ETH/USD: ✅ ENABLED[0m
+[96m[03:28:56][INFO] Rebalance tolerance: 25.0% (protects trending assets)[0m
+[96m[03:28:56][INFO] Max winner allocation: 85.0% before forced rebalancing[0m
+[96m[03:28:56][INFO] Safety reserve: 10% (using 90% of balances)[0m
+[96m[03:28:56][INFO] 🔄 Continuous monitoring: ENABLED[0m
+[96m[03:28:56][INFO] ⚡ Order replacement: AGGRESSIVE (20s intervals)[0m
+[95m[03:28:56][ENHANCED] 🎪 Current cycle stage: EARLY ALTSEASON - Optimal timing![0m
+
+[95m[03:28:56][ENHANCED] 🎯 EXPECTED PERFORMANCE: 37-59% Annual Returns[0m
+[96m[03:28:56][INFO] 🏆 XRP/BTC: 45-75% (cyclical opportunity)[0m
+[96m[03:28:56][INFO] 💎 ETH/USD: 25-35% (stable high performance)[0m
+
+[95m[03:28:56][ENHANCED] === ENHANCED MULTI-PAIR GRIDBOT ===[0m
+[96m[03:28:56][INFO] Trading pairs enabled: 2[0m
+[96m[03:28:56][INFO]   XRP/BTC: 2.5% spacing, 60.0% allocation[0m
+[96m[03:28:56][INFO]     Adaptive orders: 4-20 per side (based on balance)[0m
+[96m[03:28:56][INFO]     Startup rebalance: ✅ ENABLED[0m
+[96m[03:28:56][INFO]   ETH/USD: 1.5% spacing, 40.0% allocation[0m
+[96m[03:28:56][INFO]     Adaptive orders: 3-18 per side (based on balance)[0m
+[96m[03:28:56][INFO]     Startup rebalance: ✅ ENABLED[0m
+[96m[03:28:56][INFO] Rebalance tolerance: 25.0% (triggers at >75.0%/25.0%)[0m
+[96m[03:28:56][INFO] Safety reserve: 10% (using 90% of balances)[0m
+[96m[03:28:56][INFO] Continuous monitoring: ENABLED[0m
+[95m[03:28:56][ENHANCED] === STARTING ENHANCED MULTI-PAIR GRIDBOT ===[0m
+[95m[03:28:56][ENHANCED] Step 0: Testing API connection...[0m
+[95m[03:28:56][ENHANCED] DOCKER ENVIRONMENT DETECTED[0m
+[96m[03:28:56][INFO] Applying Docker-specific initialization delays...[0m
+[96m[03:28:56][INFO] Docker startup delay: 5 seconds...[0m
+[96m[03:29:01][INFO] Container ID: f53246d54ffb[0m
+[95m[03:29:01][ENHANCED] TESTING API CONNECTION...[0m
+[96m[03:29:01][INFO] Docker environment detected - using enhanced retry logic[0m
+[92m[03:29:02][SUCCESS] API connection test successful![0m
+[96m[03:29:02][INFO] Fetching current prices for all pairs...[0m
+[96m[03:29:02][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[03:29:02][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[03:29:02][INFO] Requesting prices for: XXRPXXBT,XETHZUSD[0m
+[96m[03:29:02][INFO] Received ticker data for 2 pairs[0m
+[92m[03:29:02][SUCCESS]   ETH/USD: 3215.9400000[0m
+[92m[03:29:02][SUCCESS]   XRP/BTC: 0.0000235[0m
+[92m[03:29:02][SUCCESS] Successfully retrieved prices for 2 pairs[0m
+[92m[03:29:02][SUCCESS] Price data retrieval successful![0m
+[95m[03:29:02][ENHANCED] Step 1: Cleaning up existing orders...[0m
+[95m[03:29:02][ENHANCED] CANCELING ALL EXISTING ORDERS...[0m
+[96m[03:29:02][INFO] Docker environment detected - using enhanced retry logic[0m
+[92m[03:29:03][SUCCESS] Canceled 35 existing orders[0m
+[96m[03:29:03][INFO] Waiting for cancellations to process...[0m
+[95m[03:29:06][ENHANCED] Step 2: Fetching current balances...[0m
+[96m[03:29:06][INFO] Fetching current balances...[0m
+[96m[03:29:06][INFO] Docker environment detected - using enhanced retry logic[0m
+[96m[03:29:07][INFO] Current balances:[0m
+[96m[03:29:07][INFO]   DOT28.S: 45.235442[0m
+[96m[03:29:07][INFO]   XETH: 0.013525[0m
+[96m[03:29:07][INFO]   XXBT: 0.000609[0m
+[96m[03:29:07][INFO]   XXRP: 105.945477[0m
+[96m[03:29:07][INFO]   ZUSD: 164.896400[0m
+[95m[03:29:07][ENHANCED] Step 3: Fetching current market prices...[0m
+[96m[03:29:07][INFO] Fetching current prices for all pairs...[0m
+[96m[03:29:07][INFO]   Mapping XRP/BTC -> XXRPXXBT[0m
+[96m[03:29:07][INFO]   Mapping ETH/USD -> XETHZUSD[0m
+[96m[03:29:07][INFO] Requesting prices for: XXRPXXBT,XETHZUSD[0m
+[96m[03:29:07][INFO] Received ticker data for 2 pairs[0m
+[92m[03:29:07][SUCCESS]   ETH/USD: 3215.9400000[0m
+[92m[03:29:07][SUCCESS]   XRP/BTC: 0.0000235[0m
+[92m[03:29:07][SUCCESS] Successfully retrieved prices for 2 pairs[0m
+[95m[03:29:07][ENHANCED] Step 4: Checking multi-pair portfolio balance...[0m
+[95m[03:29:07][ENHANCED] EXECUTING MULTI-PAIR PORTFOLIO REBALANCING...[0m
+[96m[03:29:07][INFO] Calculating multi-pair portfolio allocation...[0m
+[96m[03:29:07][INFO] Processing pair: XRP/BTC[0m
+[96m[03:29:07][INFO]   XRP/BTC balances: 0.000609 XXBT, 105.945477 XXRP[0m
+[96m[03:29:07][INFO]   XRP/BTC current price: 0.0000235[0m
+[96m[03:29:07][INFO]   XRP/BTC: 0.000609 XXBT + 105.945477 XXRP = 0.003096 XXBT[0m
+[96m[03:29:07][INFO] Processing pair: ETH/USD[0m
+[96m[03:29:07][INFO]   ETH/USD balances: 164.896400 ZUSD, 0.013525 XETH[0m
+[96m[03:29:07][INFO]   ETH/USD current price: 3215.9400000[0m
+[96m[03:29:07][INFO]   ETH/USD: 164.896400 ZUSD + 0.013525 XETH = 208.392319 ZUSD[0m
+[96m[03:29:07][INFO]   XRP/BTC: 0.0% (target: 60.0%)[0m
+[96m[03:29:07][INFO]   ETH/USD: 100.0% (target: 40.0%)[0m
+[96m[03:29:07][INFO] Total portfolio value calculated: 208.395415[0m
+[96m[03:29:07][INFO] Total portfolio value: ~$518.01 USD equivalent[0m
+[95m[03:29:07][ENHANCED] === REBALANCING XRP/BTC ===[0m
+[96m[03:29:07][INFO] Current allocation: 0.0% | Target: 60.0%[0m
+[96m[03:29:07][INFO] Startup rebalance for XRP/BTC: ✅ ENABLED[0m
+[96m[03:29:07][INFO] Current split: 19.7% base, 80.3% quote[0m
+[96m[03:29:07][INFO] Target split: 50% base, 50% quote[0m
+[95m[03:29:07][ENHANCED] 🧠 SMART REBALANCE CHECK FOR XRP/BTC[0m
+[96m[03:29:07][INFO]   ✅ Startup rebalancing enabled for XRP/BTC - proceeding[0m
+[95m[03:29:07][ENHANCED] XRP/BTC needs 50/50 rebalancing! (>25.0% deviation)[0m
+[95m[03:29:07][ENHANCED] EXECUTING 50/50 REBALANCING FOR XRP/BTC[0m
+[96m[03:29:07][INFO] Current balances: 0.000609 XXBT, 105.945477 XXRP[0m
+[96m[03:29:07][INFO] Current price: 0.0000235[0m
+[96m[03:29:07][INFO] Total pair value: 0.003096 XXBT[0m
+[96m[03:29:07][INFO] Target 50/50 split:[0m
+[96m[03:29:07][INFO]   Target XXBT: 0.001548[0m
+[96m[03:29:07][INFO]   Target XXRP: 65.932491[0m
+[96m[03:29:07][INFO] Differences from target:[0m
+[96m[03:29:07][INFO]   XXBT difference: -0.000940[0m
+[96m[03:29:07][INFO]   XXRP difference: 40.012985[0m
+[96m[03:29:07][INFO] Trade amount too small for XRP/BTC, skipping rebalancing[0m
+[92m[03:29:07][SUCCESS] XRP/BTC rebalanced successfully![0m
+[95m[03:29:09][ENHANCED] === REBALANCING ETH/USD ===[0m
+[96m[03:29:09][INFO] Current allocation: 100.0% | Target: 40.0%[0m
+[96m[03:29:09][INFO] Startup rebalance for ETH/USD: ✅ ENABLED[0m
+[96m[03:29:09][INFO] Current split: 79.1% base, 20.9% quote[0m
+[96m[03:29:09][INFO] Target split: 50% base, 50% quote[0m
+[95m[03:29:09][ENHANCED] 🧠 SMART REBALANCE CHECK FOR ETH/USD[0m
+[96m[03:29:09][INFO]   ✅ Startup rebalancing enabled for ETH/USD - proceeding[0m
+[95m[03:29:09][ENHANCED] ETH/USD needs 50/50 rebalancing! (>25.0% deviation)[0m
+[95m[03:29:09][ENHANCED] EXECUTING 50/50 REBALANCING FOR ETH/USD[0m
+[96m[03:29:09][INFO] Current balances: 164.896400 ZUSD, 0.013525 XETH[0m
+[96m[03:29:09][INFO] Current price: 3215.9400000[0m
+[96m[03:29:09][INFO] Total pair value: 208.392319 ZUSD[0m
+[96m[03:29:09][INFO] Target 50/50 split:[0m
+[96m[03:29:09][INFO]   Target ZUSD: 104.196160[0m
+[96m[03:29:09][INFO]   Target XETH: 0.032400[0m
+[96m[03:29:09][INFO] Differences from target:[0m
+[96m[03:29:09][INFO]   ZUSD difference: 60.700240[0m
+[96m[03:29:09][INFO]   XETH difference: -0.018875[0m
+[95m[03:29:09][ENHANCED] Buying 0.018875 ETH with USD...[0m
+[96m[03:29:09][INFO] Placing BUY market order: 0.018875 on XETHZUSD[0m
+[92m[03:29:09][SUCCESS] Market order executed: buy 0.018875 XETHZUSD[0m
+[92m[03:29:09][SUCCESS] Rebalancing trade executed for ETH/USD[0m
+[92m[03:29:09][SUCCESS] ETH/USD rebalanced successfully![0m
+[95m[03:29:11][ENHANCED] REBALANCING COMPLETE - Refreshing balances...[0m

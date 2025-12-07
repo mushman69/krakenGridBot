@@ -241,12 +241,19 @@ class GridBotDeployer:
         except (subprocess.CalledProcessError, json.JSONDecodeError):
             return {'State': 'error'}
     
-    def build_image(self) -> bool:
+    def build_image(self, no_cache: bool = False) -> bool:
         """Build the Docker image"""
         self.print_header("Building Docker Image")
         
+        if no_cache:
+            self.print_status("Building with --no-cache (fresh build)...")
+        
         try:
-            self.run_command(['docker', 'build', '-t', self.image_name, '.'])
+            cmd = ['docker', 'build']
+            if no_cache:
+                cmd.append('--no-cache')
+            cmd.extend(['-t', self.image_name, '.'])
+            self.run_command(cmd)
             self.print_success("Docker image built successfully")
             return True
         except subprocess.CalledProcessError:
@@ -495,12 +502,12 @@ class GridBotDeployer:
             self.print_error("Docker cleanup failed")
             return False
     
-    def update_bot(self) -> bool:
+    def update_bot(self, no_cache: bool = False) -> bool:
         """Update bot by rebuilding and restarting"""
         self.print_header("Updating GridBot")
         
         if self.stop_container():
-            if self.build_image():
+            if self.build_image(no_cache=no_cache):
                 return self.start_container()
         return False
     
@@ -764,6 +771,7 @@ def main():
     parser.add_argument('--export', action='store_true', help='Export data to CSV')
     parser.add_argument('--charts', action='store_true', help='Generate charts')
     parser.add_argument('--live', action='store_true', help='Live monitoring')
+    parser.add_argument('--no-cache', action='store_true', help='Build without cache (for build/update commands)')
     
     args = parser.parse_args()
     
@@ -775,6 +783,7 @@ def main():
         print(f"\n{Colors.CYAN}Examples:{Colors.RESET}")
         print("  python docker-deploy.py setup")
         print("  python docker-deploy.py logs")
+        print("  python docker-deploy.py update --no-cache  # Force fresh rebuild")
         print("  python docker-deploy.py analyze --days 7")
         print("  python docker-deploy.py analyze --export")
         print("  python docker-deploy.py verify-pnl")
@@ -784,7 +793,7 @@ def main():
     success = True
     
     if args.command == 'build':
-        success = deployer.build_image()
+        success = deployer.build_image(no_cache=args.no_cache)
     elif args.command == 'start':
         success = deployer.start_container()
     elif args.command == 'stop':
@@ -823,7 +832,7 @@ def main():
     elif args.command == 'clean':
         success = deployer.clean_docker()
     elif args.command == 'update':
-        success = deployer.update_bot()
+        success = deployer.update_bot(no_cache=args.no_cache)
     elif args.command == 'setup':
         success = deployer.complete_setup()
     elif args.command == 'verify-pnl':
