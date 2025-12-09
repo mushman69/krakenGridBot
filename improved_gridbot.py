@@ -1651,14 +1651,18 @@ class ImprovedGridBot:
                     await self.get_account_balance()
                     
                     # Place replacement buy orders for each filled sell order
+                    # IMPORTANT: Start from level 1 (closest to current price) to ensure proper spacing
+                    # Each replacement is placed at successive grid levels (1, 2, 3...) from current price
                     grid_interval = config.get('grid_interval', 1.5)
                     orders_placed = 0
                     for i in range(filled_sells):
                         volume = self.calculate_order_volume(pair, 'buy', config, current_price, 1)
                         if volume:
-                            # Place buy order at appropriate grid level below current price
-                            price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
+                            # Place buy orders at levels 1, 2, 3... below current price (not buy_count+1)
+                            # This ensures proper grid spacing for replacement orders
+                            price_offset = (grid_interval / 100.0) * (i + 1)
                             buy_price = current_price * (1 - price_offset)
+                            Logger.info(f"📊 {pair}: Placing replacement buy at level {i+1} ({price_offset*100:.1f}% below current ${current_price:.2f})")
                             order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
                             if order_id:
                                 orders_placed += 1
@@ -1701,14 +1705,18 @@ class ImprovedGridBot:
                     await self.get_account_balance()
                     
                     # Place replacement sell orders for each filled buy order
+                    # IMPORTANT: Start from level 1 (closest to current price) to ensure proper spacing
+                    # Each replacement is placed at successive grid levels (1, 2, 3...) from current price
                     grid_interval = config.get('grid_interval', 1.5)
                     orders_placed = 0
                     for i in range(filled_buys):
                         volume = self.calculate_order_volume(pair, 'sell', config, current_price, 1)
                         if volume:
-                            # Place sell order at appropriate grid level above current price
-                            price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
+                            # Place sell orders at levels 1, 2, 3... above current price (not sell_count+1)
+                            # This ensures proper grid spacing for replacement orders
+                            price_offset = (grid_interval / 100.0) * (i + 1)
                             sell_price = current_price * (1 + price_offset)
+                            Logger.info(f"📊 {pair}: Placing replacement sell at level {i+1} ({price_offset*100:.1f}% above current ${current_price:.2f})")
                             order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
                             if order_id:
                                 orders_placed += 1
@@ -1773,10 +1781,11 @@ class ImprovedGridBot:
                         volume = self.calculate_order_volume(pair, 'buy', config, current_price, needed)
                         if volume:
                             orders_placed = 0
+                            grid_interval = config.get('grid_interval', 1.5)
                             for i in range(needed):
-                                # Find a price below current that doesn't have an order
-                                grid_interval = config.get('grid_interval', 1.5)
-                                price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
+                                # Place buy orders at levels 1, 2, 3... below current price
+                                # This ensures proper grid spacing
+                                price_offset = (grid_interval / 100.0) * (i + 1)
                                 buy_price = current_price * (1 - price_offset)
                                 
                                 order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
@@ -1819,9 +1828,10 @@ class ImprovedGridBot:
                         volume = self.calculate_order_volume(pair, 'buy', config, current_price, can_add)
                         if volume:
                             orders_placed = 0
+                            grid_interval = config.get('grid_interval', 1.5)
                             for i in range(can_add):
-                                grid_interval = config.get('grid_interval', 1.5)
-                                price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
+                                # Place buy orders at levels 1, 2, 3... below current price
+                                price_offset = (grid_interval / 100.0) * (i + 1)
                                 buy_price = current_price * (1 - price_offset)
                                 order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
                                 if order_id:
@@ -1867,10 +1877,11 @@ class ImprovedGridBot:
                         volume = self.calculate_order_volume(pair, 'sell', config, current_price, needed)
                         if volume:
                             orders_placed = 0
+                            grid_interval = config.get('grid_interval', 1.5)
                             for i in range(needed):
-                                # Find a price above current that doesn't have an order
-                                grid_interval = config.get('grid_interval', 1.5)
-                                price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
+                                # Place sell orders at levels 1, 2, 3... above current price
+                                # This ensures proper grid spacing
+                                price_offset = (grid_interval / 100.0) * (i + 1)
                                 sell_price = current_price * (1 + price_offset)
                                 
                                 order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
@@ -1914,9 +1925,10 @@ class ImprovedGridBot:
                         volume = self.calculate_order_volume(pair, 'sell', config, current_price, can_add)
                         if volume:
                             orders_placed = 0
+                            grid_interval = config.get('grid_interval', 1.5)
                             for i in range(can_add):
-                                grid_interval = config.get('grid_interval', 1.5)
-                                price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
+                                # Place sell orders at levels 1, 2, 3... above current price
+                                price_offset = (grid_interval / 100.0) * (i + 1)
                                 sell_price = current_price * (1 + price_offset)
                                 order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
                                 if order_id:
