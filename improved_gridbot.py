@@ -679,6 +679,8 @@ class ImprovedGridBot:
         
         # Track expected order counts to detect filled orders
         self.expected_order_counts = {}  # Track expected buy/sell counts per pair
+        self.expected_counts_file = os.path.join(os.getenv('DATA_DIR', '.'), '.expected_order_counts.json')
+        self._load_expected_counts()  # Load from file if exists
         
         # Get enabled trading pairs
         self.enabled_pairs = {pair: config for pair, config in TRADING_PAIRS.items() 
@@ -689,11 +691,39 @@ class ImprovedGridBot:
         
         Logger.enhanced("🚀 ENHANCED MULTI-PAIR GRIDBOT WITH PnL TRACKING 🚀")
         Logger.info(f"📈 Trading pairs enabled: {len(self.enabled_pairs)}")
+        if self.expected_order_counts:
+            Logger.info(f"📊 Loaded expected order counts from previous session: {self.expected_order_counts}")
         for pair, config in self.enabled_pairs.items():
             grid_interval = config.get('grid_interval', 3.0)
             target_allocation = config.get('target_allocation', 'N/A')
             Logger.info(f"  {pair}: {grid_interval}% spacing, {target_allocation}% allocation")
         Logger.info(f"📊 PnL Tracking: ENABLED (reporting every {PNL_REPORT_INTERVAL//60} minutes)")
+
+    def _load_expected_counts(self):
+        """Load expected order counts from file (survives restarts)"""
+        try:
+            if os.path.exists(self.expected_counts_file):
+                with open(self.expected_counts_file, 'r') as f:
+                    data = json.load(f)
+                    self.expected_order_counts = data
+                    Logger.info(f"📂 Loaded expected order counts from {self.expected_counts_file}")
+        except Exception as e:
+            Logger.warning(f"⚠️ Could not load expected order counts: {e}")
+            self.expected_order_counts = {}
+    
+    def _save_expected_counts(self):
+        """Save expected order counts to file (survives restarts)"""
+        try:
+            # Ensure directory exists
+            dir_path = os.path.dirname(self.expected_counts_file)
+            if dir_path:
+                os.makedirs(dir_path, exist_ok=True)
+            
+            with open(self.expected_counts_file, 'w') as f:
+                json.dump(self.expected_order_counts, f)
+            Logger.info(f"💾 Saved expected order counts: {self.expected_order_counts}")
+        except Exception as e:
+            Logger.warning(f"⚠️ Could not save expected order counts: {e}")
 
     def get_kraken_signature(self, urlpath, data):
         post_data = urllib.parse.urlencode(data)
@@ -780,33 +810,38 @@ class ImprovedGridBot:
             
             # Calculate locked funds per asset
             locked_funds = {}
+            Logger.info(f"🔍 Analyzing {len(open_orders)} open orders for locked funds...")
             for order_id, order_data in open_orders.items():
                 desc = order_data.get('descr', {})
                 order_type = desc.get('type', '')
                 vol = float(order_data.get('vol', 0))
+                pair_str = desc.get('pair', '')
+                pair_str_upper = pair_str.upper()
                 
                 if order_type == 'buy':
                     # Buy orders lock the base currency (USD for ETH/USD, BTC for XRP/BTC)
-                    pair_str = desc.get('pair', '').upper()
-                    if 'ETH' in pair_str and 'USD' in pair_str:
+                    if 'ETH' in pair_str_upper and 'USD' in pair_str_upper:
                         # ETH/USD buy order: locks USD
                         price = float(desc.get('price', 0))
                         locked_usd = vol * price
                         locked_funds['ZUSD'] = locked_funds.get('ZUSD', 0) + locked_usd
-                    elif 'XRP' in pair_str and ('BTC' in pair_str or 'XBT' in pair_str):
+                        Logger.info(f"  🔒 Locked {locked_usd:.2f} USD from ETH/USD buy: {vol:.6f} ETH @ ${price:.2f} (pair: {pair_str})")
+                    elif 'XRP' in pair_str_upper and ('BTC' in pair_str_upper or 'XBT' in pair_str_upper):
                         # XRP/BTC buy order: locks BTC (Kraken returns XRPXBT, not XRPBTC)
                         price = float(desc.get('price', 0))
                         locked_btc = vol * price
                         locked_funds['XXBT'] = locked_funds.get('XXBT', 0) + locked_btc
+                        Logger.info(f"  🔒 Locked {locked_btc:.8f} BTC from XRP/BTC buy: {vol:.2f} XRP @ {price:.8f} BTC (pair: {pair_str})")
                 elif order_type == 'sell':
                     # Sell orders lock the quote currency (ETH for ETH/USD, XRP for XRP/BTC)
-                    pair_str = desc.get('pair', '').upper()
-                    if 'ETH' in pair_str and 'USD' in pair_str:
+                    if 'ETH' in pair_str_upper and 'USD' in pair_str_upper:
                         # ETH/USD sell order: locks ETH
                         locked_funds['XETH'] = locked_funds.get('XETH', 0) + vol
-                    elif 'XRP' in pair_str and ('BTC' in pair_str or 'XBT' in pair_str):
+                        Logger.info(f"  🔒 Locked {vol:.6f} ETH from ETH/USD sell (pair: {pair_str})")
+                    elif 'XRP' in pair_str_upper and ('BTC' in pair_str_upper or 'XBT' in pair_str_upper):
                         # XRP/BTC sell order: locks XRP (Kraken returns XRPXBT, not XRPBTC)
                         locked_funds['XXRP'] = locked_funds.get('XXRP', 0) + vol
+                        Logger.info(f"  🔒 Locked {vol:.2f} XRP from XRP/BTC sell (pair: {pair_str})")
             
             # Calculate and store available balances (total - locked)
             self.available_balances = {}
@@ -1086,42 +1121,72 @@ class ImprovedGridBot:
             
             if pair == "ETH/USD":
                 # For ETH/USD: base is ZUSD, quote is XETH
+                min_order_eth = config.get('min_order_size', 0.005)
+                min_order_usd = current_price * min_order_eth
+                
                 if side == 'buy':
                     # Buy orders: need USD, buying ETH
                     available_usd = base_balance * 0.95  # Use 95% of USD
-                    if available_usd < 10:  # Minimum $10
+                    if available_usd < min_order_usd:  # Check if we can afford at least one order
+                        Logger.warning(f"⚠️ Insufficient USD for buy orders: ${available_usd:.2f} < ${min_order_usd:.2f} minimum")
                         return None
                     # Distribute USD across buy orders
                     usd_per_order = available_usd / orders_count
                     volume = usd_per_order / current_price  # ETH volume
+                    # Verify volume meets minimum
+                    if volume < min_order_eth:
+                        Logger.warning(f"⚠️ Calculated buy volume {volume:.6f} ETH < {min_order_eth} minimum")
+                        return None
+                    Logger.info(f"📊 Calculated buy volume for {pair}: {volume:.6f} ETH (${usd_per_order:.2f} per order, {orders_count} orders)")
                 else:  # sell
                     # Sell orders: need ETH, selling for USD
                     # quote_balance should already be available balance (locked funds subtracted)
                     available_eth = quote_balance * 0.95  # Use 95% of available ETH
                     total_eth = float(self.balances.get(quote_asset, 0))
-                    if available_eth < 0.005:  # Minimum 0.005 ETH
-                        Logger.warning(f"⚠️ Insufficient ETH balance for sell order: {available_eth:.6f} < 0.005")
+                    if available_eth < min_order_eth:  # Check if we can afford at least one order
+                        Logger.warning(f"⚠️ Insufficient ETH balance for sell order: {available_eth:.6f} < {min_order_eth}")
                         Logger.warning(f"   Total ETH: {total_eth:.6f}, Available (unlocked): {quote_balance:.6f}, After 95%: {available_eth:.6f}")
                         return None
                     # Distribute ETH across sell orders
                     volume = available_eth / orders_count
+                    # Verify volume meets minimum
+                    if volume < min_order_eth:
+                        Logger.warning(f"⚠️ Calculated sell volume {volume:.6f} ETH < {min_order_eth} minimum (try fewer orders)")
+                        return None
                     Logger.info(f"📊 Calculated sell volume for {pair}: {volume:.6f} ETH (from {available_eth:.6f} available after 95%, {quote_balance:.6f} total available, {total_eth:.6f} total ETH, {orders_count} orders)")
             else:
                 # For XRP/BTC: base is XXBT, quote is XXRP
+                # Calculate minimum XRP per order based on $10 USD minimum
+                min_order_usd = config.get('min_order_size', 10.0)  # $10 USD minimum
+                btc_usd = self.btc_usd_price if self.btc_usd_price else 90000.0
+                xrp_price_usd = current_price * btc_usd  # XRP price in USD
+                min_xrp_per_order = min_order_usd / xrp_price_usd if xrp_price_usd > 0 else 5.0
+                min_btc_per_order = min_order_usd / btc_usd if btc_usd > 0 else 0.0001
+                
                 if side == 'buy':
                     # Buy orders: need BTC, buying XRP
                     available_btc = base_balance * 0.95
-                    if available_btc < 0.0001:  # Minimum BTC
+                    if available_btc < min_btc_per_order:  # Check if we can afford at least one order
+                        Logger.warning(f"⚠️ Insufficient BTC for buy orders: {available_btc:.8f} < {min_btc_per_order:.8f} minimum")
                         return None
                     btc_per_order = available_btc / orders_count
                     volume = btc_per_order / current_price  # XRP volume
+                    # Verify volume meets minimum
+                    if volume < min_xrp_per_order:
+                        Logger.warning(f"⚠️ Calculated buy volume {volume:.2f} XRP < {min_xrp_per_order:.2f} minimum")
+                        return None
+                    Logger.info(f"📊 Calculated buy volume for {pair}: {volume:.2f} XRP ({btc_per_order:.8f} BTC per order, {orders_count} orders)")
                 else:  # sell
                     # Sell orders: need XRP, selling for BTC
                     available_xrp = quote_balance * 0.95
-                    if available_xrp < 10:  # Minimum XRP
-                        Logger.warning(f"⚠️ Insufficient XRP balance for sell order: {available_xrp:.2f} < 10 (quote_balance: {quote_balance:.2f})")
+                    if available_xrp < min_xrp_per_order:  # Check if we can afford at least one order
+                        Logger.warning(f"⚠️ Insufficient XRP balance for sell order: {available_xrp:.2f} < {min_xrp_per_order:.2f} XRP (${min_order_usd} min)")
                         return None
                     volume = available_xrp / orders_count
+                    # Verify volume meets minimum
+                    if volume < min_xrp_per_order:
+                        Logger.warning(f"⚠️ Calculated sell volume {volume:.2f} XRP < {min_xrp_per_order:.2f} minimum (try fewer orders)")
+                        return None
                     Logger.info(f"📊 Calculated sell volume for {pair}: {volume:.2f} XRP (from {available_xrp:.2f} available, {orders_count} orders)")
             
             return volume
@@ -1163,21 +1228,58 @@ class ImprovedGridBot:
                 usd_available = base_balance * 0.95
                 eth_available = quote_balance * 0.95
                 
-                # Buy orders: based on USD available
-                buy_orders_count = min(max_orders_per_side, max(min_orders_per_side, int(usd_available / (current_price * 0.005))))
-                # Sell orders: based on ETH available
-                sell_orders_count = min(max_orders_per_side, max(min_orders_per_side, int(eth_available / 0.005)))
+                # Get minimum order size from config
+                min_order_eth = config.get('min_order_size', 0.005)
+                min_order_value_usd = current_price * min_order_eth
+                
+                # Buy orders: calculate how many we can ACTUALLY afford (not forcing minimum)
+                max_affordable_buys = int(usd_available / min_order_value_usd) if min_order_value_usd > 0 else 0
+                buy_orders_count = min(max_orders_per_side, max_affordable_buys)
+                if buy_orders_count < min_orders_per_side and buy_orders_count > 0:
+                    Logger.warning(f"⚠️ {pair}: Can only afford {buy_orders_count} buy orders (desired min: {min_orders_per_side}, USD available: ${usd_available:.2f})")
+                elif buy_orders_count == 0 and usd_available > 0:
+                    Logger.warning(f"⚠️ {pair}: Cannot afford any buy orders - need ${min_order_value_usd:.2f} per order, have ${usd_available:.2f}")
+                
+                # Sell orders: calculate how many we can ACTUALLY afford (not forcing minimum)
+                max_affordable_sells = int(eth_available / min_order_eth) if min_order_eth > 0 else 0
+                sell_orders_count = min(max_orders_per_side, max_affordable_sells)
+                if sell_orders_count < min_orders_per_side and sell_orders_count > 0:
+                    Logger.warning(f"⚠️ {pair}: Can only afford {sell_orders_count} sell orders (desired min: {min_orders_per_side}, ETH available: {eth_available:.6f})")
             else:
                 # XRP/BTC logic - use available balances (accounting for locked funds) if calculated
                 if hasattr(self, 'available_balances') and self.available_balances:
                     base_balance = float(self.available_balances.get(base_asset, self.balances.get(base_asset, 0)))  # BTC
                     quote_balance = float(self.available_balances.get(quote_asset, self.balances.get(quote_asset, 0)))  # XRP
+                    Logger.info(f"📊 {pair}: Using available balances - BTC: {base_balance:.8f}, XRP: {quote_balance:.2f}")
                 else:
                     base_balance = float(self.balances.get(base_asset, 0))  # BTC
                     quote_balance = float(self.balances.get(quote_asset, 0))  # XRP
+                    Logger.warning(f"⚠️ {pair}: Using total balances - BTC: {base_balance:.8f}, XRP: {quote_balance:.2f}")
                 
-                buy_orders_count = min(max_orders_per_side, max(min_orders_per_side, int(base_balance / 0.0001)))
-                sell_orders_count = min(max_orders_per_side, max(min_orders_per_side, int(quote_balance / 10)))
+                # Calculate minimum XRP per order based on $10 USD minimum
+                min_order_usd = config.get('min_order_size', 10.0)  # $10 USD minimum
+                btc_usd = self.btc_usd_price if self.btc_usd_price else 90000.0
+                xrp_price_usd = current_price * btc_usd  # XRP price in USD
+                min_xrp_per_order = min_order_usd / xrp_price_usd if xrp_price_usd > 0 else 10.0
+                min_btc_per_order = min_order_usd / btc_usd if btc_usd > 0 else 0.0001
+                
+                Logger.info(f"📊 {pair}: Min order: ${min_order_usd} = {min_xrp_per_order:.2f} XRP or {min_btc_per_order:.8f} BTC (XRP=${xrp_price_usd:.4f})")
+                
+                # Buy orders: calculate how many we can ACTUALLY afford
+                btc_available = base_balance * 0.95
+                max_affordable_buys = int(btc_available / min_btc_per_order) if min_btc_per_order > 0 else 0
+                buy_orders_count = min(max_orders_per_side, max_affordable_buys)
+                if buy_orders_count < min_orders_per_side and buy_orders_count > 0:
+                    Logger.warning(f"⚠️ {pair}: Can only afford {buy_orders_count} buy orders (desired min: {min_orders_per_side})")
+                elif buy_orders_count == 0 and btc_available > 0:
+                    Logger.warning(f"⚠️ {pair}: Cannot afford any buy orders - need {min_btc_per_order:.8f} BTC, have {btc_available:.8f} BTC")
+                
+                # Sell orders: calculate how many we can ACTUALLY afford
+                xrp_available = quote_balance * 0.95
+                max_affordable_sells = int(xrp_available / min_xrp_per_order) if min_xrp_per_order > 0 else 0
+                sell_orders_count = min(max_orders_per_side, max_affordable_sells)
+                if sell_orders_count < min_orders_per_side and sell_orders_count > 0:
+                    Logger.warning(f"⚠️ {pair}: Can only afford {sell_orders_count} sell orders (desired min: {min_orders_per_side})")
             
             orders_placed = 0
             buy_orders_placed = 0
@@ -1247,6 +1349,9 @@ class ImprovedGridBot:
                     'sell': sell_orders_placed
                 }
                 Logger.error(f"🔴 {pair}: FORCED CORRECTION - Reset expected counts to {buy_orders_placed} buy, {sell_orders_placed} sell")
+            
+            # Save expected counts to file (survives restarts)
+            self._save_expected_counts()
             
             return True
             
@@ -1459,7 +1564,7 @@ class ImprovedGridBot:
             # that would mask missing orders. Expected counts should only decrease when orders fill.
             # CRITICAL: Only initialize if we actually matched orders - if no orders matched,
             # don't set expected counts to 0 (that would cause false "all orders filled" detection)
-            for pair in self.enabled_pairs.keys():
+            for pair, config in self.enabled_pairs.items():
                 pair_orders = orders_by_pair.get(pair, {'buy': 0, 'sell': 0})
                 current_buy = pair_orders['buy']
                 current_sell = pair_orders['sell']
@@ -1482,47 +1587,32 @@ class ImprovedGridBot:
                         # Orders exist but couldn't be matched - don't initialize to 0
                         Logger.warning(f"⚠️ {pair}: Skipping expected count initialization - orders exist but couldn't be matched (matching issue)")
                 else:
-                    # Expected counts already exist - verify they match current orders (for debugging)
+                    # Expected counts already exist (loaded from file or set during grid creation)
                     expected = self.expected_order_counts[pair]
                     expected_buy = expected.get('buy', 0)
                     expected_sell = expected.get('sell', 0)
                     
-                    # CRITICAL CHECK: If expected counts seem wrong (higher than current when no orders were placed),
-                    # this indicates a bug where expected counts were set from intended counts instead of actual
-                    # FIX THIS IMMEDIATELY before logging
-                    if expected_buy > current_buy and current_buy == 0:
-                        Logger.error(f"🔴 {pair}: BUG DETECTED - Expected buy count ({expected_buy}) > current (0) but no orders exist!")
-                        Logger.error(f"   This suggests expected counts were set from intended counts, not actual placed orders")
-                        Logger.error(f"   FORCING correction: Setting expected buy to 0 (actual)")
-                        self.expected_order_counts[pair]['buy'] = 0
-                        expected_buy = 0
-                    
-                    # Also check if expected counts don't match current at all - reset to current
-                    # CRITICAL: If expected_buy > 0 but current_buy = 0, this is ALWAYS wrong (orders can't be filled if they were never placed)
+                    # Log the comparison - this is how we detect fills!
                     if expected_buy != current_buy or expected_sell != current_sell:
-                        # If expected buy > 0 but current buy = 0, this is definitely wrong
-                        if expected_buy > 0 and current_buy == 0:
-                            Logger.error(f"🔴 {pair}: CRITICAL - Expected buy ({expected_buy}) > 0 but current is 0! Resetting to 0")
-                            self.expected_order_counts[pair]['buy'] = 0
-                            expected_buy = 0
-                        # If we have orders but expected counts are wrong, reset to match current
-                        elif (current_buy > 0 or current_sell > 0) and (expected_buy != current_buy or expected_sell != current_sell):
-                            Logger.warning(f"⚠️ {pair}: Expected counts ({expected_buy} buy, {expected_sell} sell) don't match current ({current_buy} buy, {current_sell} sell)")
-                            Logger.warning(f"   Resetting expected counts to match current orders")
-                            self.expected_order_counts[pair] = {
-                                'buy': current_buy,
-                                'sell': current_sell
-                            }
-                            expected_buy = current_buy
-                            expected_sell = current_sell
-                    
-                    # Also check for sell orders - if expected > current but current matches what we actually have
-                    if expected_sell > current_sell and current_sell > 0:
-                        # This might be OK if some orders filled, but log it
-                        Logger.info(f"📊 {pair}: Expected sell count ({expected_sell}) > current ({current_sell}) - some orders may have filled")
-                    
-                    if current_buy != expected_buy or current_sell != expected_sell:
                         Logger.info(f"📊 {pair}: Current orders: {current_buy} buy, {current_sell} sell | Expected: {expected_buy} buy, {expected_sell} sell")
+                    
+                    # IMPORTANT: expected > current means orders FILLED - this is NORMAL and should trigger replacement
+                    # DO NOT reset expected to current here - that would prevent fill detection!
+                    
+                    # Only reset expected if expected > current AND no orders exist at all (indicates stale data)
+                    if expected_sell > current_sell:
+                        Logger.info(f"📊 {pair}: Expected {expected_sell} sells but have {current_sell} - {expected_sell - current_sell} may have filled!")
+                    if expected_buy > current_buy:
+                        Logger.info(f"📊 {pair}: Expected {expected_buy} buys but have {current_buy} - {expected_buy - current_buy} may have filled!")
+                    
+                    # Only reset if expected is impossibly high (more than max configured)
+                    max_orders = config.get('max_orders_per_side', 20)
+                    if expected_buy > max_orders:
+                        Logger.warning(f"⚠️ {pair}: Expected buy count ({expected_buy}) > max ({max_orders}), resetting to current ({current_buy})")
+                        self.expected_order_counts[pair]['buy'] = current_buy
+                    if expected_sell > max_orders:
+                        Logger.warning(f"⚠️ {pair}: Expected sell count ({expected_sell}) > max ({max_orders}), resetting to current ({current_sell})")
+                        self.expected_order_counts[pair]['sell'] = current_sell
             
             # Check each pair and replace missing orders
             for pair, config in self.enabled_pairs.items():
@@ -1654,76 +1744,93 @@ class ImprovedGridBot:
                 # Also check if we need to add orders to maintain minimum grid
                 # Check if we need to add buy orders
                 if buy_count < min_orders_per_side:
-                    needed = min_orders_per_side - buy_count
-                    Logger.info(f"📊 {pair}: Need {needed} more buy orders (current: {buy_count})")
-                    
-                    volume = self.calculate_order_volume(pair, 'buy', config, current_price, needed)
-                    if volume:
-                        orders_placed = 0
-                        for i in range(needed):
-                            # Find a price below current that doesn't have an order
-                            grid_interval = config.get('grid_interval', 1.5)
-                            price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
-                            buy_price = current_price * (1 - price_offset)
-                            
-                            order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
-                            if order_id:
-                                orders_placed += 1
-                            await asyncio.sleep(0.1)
-                        
-                        if orders_placed > 0:
-                            # Update expected counts
-                            expected_buy = buy_count + orders_placed
-                            self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+                    # Calculate how many orders we can actually afford
+                    base_asset = config.get('base_asset')
+                    if hasattr(self, 'available_balances') and self.available_balances:
+                        base_balance = float(self.available_balances.get(base_asset, self.balances.get(base_asset, 0)))
                     else:
-                        Logger.warning(f"⚠️ Cannot calculate buy order volume for {pair}")
+                        base_balance = float(self.balances.get(base_asset, 0))
+                    
+                    available_balance = base_balance * 0.95
+                    if pair == "ETH/USD":
+                        # For ETH/USD: calculate based on min ETH order size
+                        min_order_eth = config.get('min_order_size', 0.005)
+                        min_order_usd = current_price * min_order_eth
+                        max_affordable = int(available_balance / min_order_usd) if min_order_usd > 0 else 0
+                    else:
+                        # For XRP/BTC: calculate based on $10 USD minimum
+                        min_order_usd = config.get('min_order_size', 10.0)
+                        btc_usd = self.btc_usd_price if self.btc_usd_price else 90000.0
+                        min_btc_per_order = min_order_usd / btc_usd if btc_usd > 0 else 0.0001
+                        max_affordable = int(available_balance / min_btc_per_order) if min_btc_per_order > 0 else 0
+                    
+                    max_affordable = min(max_orders_per_side, max_affordable)
+                    needed = max(0, min(max_affordable - buy_count, max_orders_per_side - buy_count))
+                    
+                    if needed > 0:
+                        Logger.info(f"📊 {pair}: Need {needed} more buy orders (current: {buy_count}, can afford up to {max_affordable} total)")
+                        
+                        volume = self.calculate_order_volume(pair, 'buy', config, current_price, needed)
+                        if volume:
+                            orders_placed = 0
+                            for i in range(needed):
+                                # Find a price below current that doesn't have an order
+                                grid_interval = config.get('grid_interval', 1.5)
+                                price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
+                                buy_price = current_price * (1 - price_offset)
+                                
+                                order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
+                                if order_id:
+                                    orders_placed += 1
+                                await asyncio.sleep(0.1)
+                            
+                            if orders_placed > 0:
+                                # Update expected counts
+                                expected_buy = buy_count + orders_placed
+                                self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+                        else:
+                            Logger.warning(f"⚠️ Cannot calculate buy order volume for {pair}")
                 elif buy_count < max_orders_per_side:
                     # Check if we can add more buy orders (we have capacity and balance)
+                    # Use available_balances if calculated, otherwise fall back to total
                     base_asset = config.get('base_asset')
-                    base_balance = float(self.balances.get(base_asset, 0))
+                    if hasattr(self, 'available_balances') and self.available_balances:
+                        base_balance = float(self.available_balances.get(base_asset, self.balances.get(base_asset, 0)))
+                    else:
+                        base_balance = float(self.balances.get(base_asset, 0))
                     
-                    # For XRP/BTC: check BTC balance; for ETH/USD: check USD balance
+                    available_balance = base_balance * 0.95
+                    
+                    # Calculate minimum order value based on pair
                     if pair == "ETH/USD":
-                        if base_balance > current_price * 0.005 * (max_orders_per_side - buy_count):
-                            # We have enough balance to add more orders
-                            can_add = min(max_orders_per_side - buy_count, int(base_balance / (current_price * 0.005)))
-                            if can_add > 0:
-                                Logger.info(f"📊 {pair}: Can add {can_add} more buy orders (current: {buy_count}, max: {max_orders_per_side})")
-                                volume = self.calculate_order_volume(pair, 'buy', config, current_price, can_add)
-                                if volume:
-                                    orders_placed = 0
-                                    for i in range(can_add):
-                                        grid_interval = config.get('grid_interval', 1.5)
-                                        price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
-                                        buy_price = current_price * (1 - price_offset)
-                                        order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
-                                        if order_id:
-                                            orders_placed += 1
-                                        await asyncio.sleep(0.1)
-                                    
-                                    if orders_placed > 0:
-                                        expected_buy = buy_count + orders_placed
-                                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+                        min_order_eth = config.get('min_order_size', 0.005)
+                        min_order_value = current_price * min_order_eth
                     else:  # XRP/BTC
-                        if base_balance > 0.0001 * (max_orders_per_side - buy_count):
-                            can_add = min(max_orders_per_side - buy_count, int(base_balance / 0.0001))
-                            if can_add > 0:
-                                Logger.info(f"📊 {pair}: Can add {can_add} more buy orders (current: {buy_count}, max: {max_orders_per_side})")
-                                volume = self.calculate_order_volume(pair, 'buy', config, current_price, can_add)
-                                if volume:
-                                    orders_placed = 0
-                                    for i in range(can_add):
-                                        grid_interval = config.get('grid_interval', 1.5)
-                                        price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
-                                        buy_price = current_price * (1 - price_offset)
-                                        order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
-                                        if order_id:
-                                            orders_placed += 1
-                                        await asyncio.sleep(0.1)
-                                    
-                                    if orders_placed > 0:
-                                        expected_buy = buy_count + orders_placed
-                                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+                        min_order_usd = config.get('min_order_size', 10.0)
+                        btc_usd = self.btc_usd_price if self.btc_usd_price else 90000.0
+                        min_order_value = min_order_usd / btc_usd  # BTC needed per order
+                    
+                    # Calculate how many more we can afford
+                    max_affordable = int(available_balance / min_order_value) if min_order_value > 0 else 0
+                    can_add = min(max_orders_per_side - buy_count, max(0, max_affordable - buy_count))
+                    
+                    if can_add > 0:
+                        Logger.info(f"📊 {pair}: Can add {can_add} more buy orders (current: {buy_count}, max: {max_orders_per_side})")
+                        volume = self.calculate_order_volume(pair, 'buy', config, current_price, can_add)
+                        if volume:
+                            orders_placed = 0
+                            for i in range(can_add):
+                                grid_interval = config.get('grid_interval', 1.5)
+                                price_offset = (grid_interval / 100.0) * (buy_count + i + 1)
+                                buy_price = current_price * (1 - price_offset)
+                                order_id = await self.place_limit_order(pair, 'buy', volume, buy_price, config)
+                                if order_id:
+                                    orders_placed += 1
+                                await asyncio.sleep(0.1)
+                            
+                            if orders_placed > 0:
+                                expected_buy = buy_count + orders_placed
+                                self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
                 
                 # Check if we need to add sell orders
                 if sell_count < min_orders_per_side:
@@ -1734,89 +1841,94 @@ class ImprovedGridBot:
                     else:
                         quote_balance = float(self.balances.get(quote_asset, 0))
                     
-                    # Calculate maximum total orders we can place
+                    # Calculate maximum total orders we can place based on config minimums
+                    available_balance = quote_balance * 0.95  # Use 95% of available
                     if pair == "ETH/USD":
-                        # For ETH/USD: minimum 0.005 ETH per order
-                        max_possible_total = int(quote_balance * 0.95 / 0.005)  # Use 95% of available
-                        max_possible_total = min(max_orders_per_side, max(min_orders_per_side, max_possible_total))
+                        # For ETH/USD: use config min_order_size (default 0.005 ETH)
+                        min_order_size = config.get('min_order_size', 0.005)
+                        max_possible_total = int(available_balance / min_order_size) if min_order_size > 0 else 0
                     else:
-                        # For XRP/BTC: minimum 10 XRP per order
-                        max_possible_total = int(quote_balance * 0.95 / 10)
-                        max_possible_total = min(max_orders_per_side, max(min_orders_per_side, max_possible_total))
+                        # For XRP/BTC: calculate minimum XRP based on $10 USD minimum
+                        min_order_usd = config.get('min_order_size', 10.0)
+                        btc_usd = self.btc_usd_price if self.btc_usd_price else 90000.0
+                        xrp_price_usd = current_price * btc_usd
+                        min_xrp_per_order = min_order_usd / xrp_price_usd if xrp_price_usd > 0 else 5.0
+                        max_possible_total = int(available_balance / min_xrp_per_order) if min_xrp_per_order > 0 else 0
                     
-                    # Calculate how many NEW orders to place (up to max possible, but at least enough to reach minimum)
-                    min_needed = min_orders_per_side - sell_count  # Minimum to reach min_orders_per_side
-                    max_can_add = max_possible_total - sell_count   # Maximum we can add
-                    needed = max(min_needed, min(max_can_add, max_orders_per_side - sell_count))
+                    # Cap at max_orders_per_side
+                    max_possible_total = min(max_orders_per_side, max_possible_total)
                     
-                    Logger.info(f"📊 {pair}: Need {needed} more sell orders (current: {sell_count}, can place up to {max_possible_total} total, adding {needed})")
+                    # Calculate how many NEW orders to place
+                    needed = max(0, min(max_possible_total - sell_count, max_orders_per_side - sell_count))
                     
-                    volume = self.calculate_order_volume(pair, 'sell', config, current_price, needed)
-                    if volume:
-                        orders_placed = 0
-                        for i in range(needed):
-                            # Find a price above current that doesn't have an order
-                            grid_interval = config.get('grid_interval', 1.5)
-                            price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
-                            sell_price = current_price * (1 + price_offset)
-                            
-                            order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
-                            if order_id:
-                                orders_placed += 1
-                            await asyncio.sleep(0.1)
+                    if needed > 0:
+                        Logger.info(f"📊 {pair}: Need {needed} more sell orders (current: {sell_count}, can place up to {max_possible_total} total)")
                         
-                        if orders_placed > 0:
-                            # Update expected counts
-                            expected_sell = sell_count + orders_placed
-                            self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
-                    else:
-                        Logger.warning(f"⚠️ Cannot calculate sell order volume for {pair}")
+                        volume = self.calculate_order_volume(pair, 'sell', config, current_price, needed)
+                        if volume:
+                            orders_placed = 0
+                            for i in range(needed):
+                                # Find a price above current that doesn't have an order
+                                grid_interval = config.get('grid_interval', 1.5)
+                                price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
+                                sell_price = current_price * (1 + price_offset)
+                                
+                                order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
+                                if order_id:
+                                    orders_placed += 1
+                                await asyncio.sleep(0.1)
+                            
+                            if orders_placed > 0:
+                                # Update expected counts
+                                expected_sell = sell_count + orders_placed
+                                self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+                        else:
+                            Logger.warning(f"⚠️ Cannot calculate sell order volume for {pair}")
                 elif sell_count < max_orders_per_side:
                     # Check if we can add more sell orders (we have capacity and balance)
+                    # Use available_balances if calculated, otherwise fall back to total
                     quote_asset = config.get('quote_asset')
-                    quote_balance = float(self.balances.get(quote_asset, 0))
+                    if hasattr(self, 'available_balances') and self.available_balances:
+                        quote_balance = float(self.available_balances.get(quote_asset, self.balances.get(quote_asset, 0)))
+                    else:
+                        quote_balance = float(self.balances.get(quote_asset, 0))
                     
-                    # For XRP/BTC: check XRP balance; for ETH/USD: check ETH balance
+                    available_balance = quote_balance * 0.95
+                    
+                    # Calculate minimum order size based on pair
                     if pair == "ETH/USD":
-                        if quote_balance > 0.005 * (max_orders_per_side - sell_count):
-                            can_add = min(max_orders_per_side - sell_count, int(quote_balance / 0.005))
-                            if can_add > 0:
-                                Logger.info(f"📊 {pair}: Can add {can_add} more sell orders (current: {sell_count}, max: {max_orders_per_side})")
-                                volume = self.calculate_order_volume(pair, 'sell', config, current_price, can_add)
-                                if volume:
-                                    orders_placed = 0
-                                    for i in range(can_add):
-                                        grid_interval = config.get('grid_interval', 1.5)
-                                        price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
-                                        sell_price = current_price * (1 + price_offset)
-                                        order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
-                                        if order_id:
-                                            orders_placed += 1
-                                        await asyncio.sleep(0.1)
-                                    
-                                    if orders_placed > 0:
-                                        expected_sell = sell_count + orders_placed
-                                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+                        min_order_size = config.get('min_order_size', 0.005)  # ETH per order
                     else:  # XRP/BTC
-                        if quote_balance > 10 * (max_orders_per_side - sell_count):
-                            can_add = min(max_orders_per_side - sell_count, int(quote_balance / 10))
-                            if can_add > 0:
-                                Logger.info(f"📊 {pair}: Can add {can_add} more sell orders (current: {sell_count}, max: {max_orders_per_side})")
-                                volume = self.calculate_order_volume(pair, 'sell', config, current_price, can_add)
-                                if volume:
-                                    orders_placed = 0
-                                    for i in range(can_add):
-                                        grid_interval = config.get('grid_interval', 1.5)
-                                        price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
-                                        sell_price = current_price * (1 + price_offset)
-                                        order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
-                                        if order_id:
-                                            orders_placed += 1
-                                        await asyncio.sleep(0.1)
-                                    
-                                    if orders_placed > 0:
-                                        expected_sell = sell_count + orders_placed
-                                        self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+                        # Calculate minimum XRP based on $10 USD minimum
+                        min_order_usd = config.get('min_order_size', 10.0)
+                        btc_usd = self.btc_usd_price if self.btc_usd_price else 90000.0
+                        xrp_price_usd = current_price * btc_usd
+                        min_order_size = min_order_usd / xrp_price_usd if xrp_price_usd > 0 else 5.0  # XRP per order
+                    
+                    # Calculate how many more we can afford
+                    max_affordable = int(available_balance / min_order_size) if min_order_size > 0 else 0
+                    can_add = min(max_orders_per_side - sell_count, max(0, max_affordable - sell_count))
+                    
+                    if can_add > 0:
+                        Logger.info(f"📊 {pair}: Can add {can_add} more sell orders (current: {sell_count}, max: {max_orders_per_side})")
+                        volume = self.calculate_order_volume(pair, 'sell', config, current_price, can_add)
+                        if volume:
+                            orders_placed = 0
+                            for i in range(can_add):
+                                grid_interval = config.get('grid_interval', 1.5)
+                                price_offset = (grid_interval / 100.0) * (sell_count + i + 1)
+                                sell_price = current_price * (1 + price_offset)
+                                order_id = await self.place_limit_order(pair, 'sell', volume, sell_price, config)
+                                if order_id:
+                                    orders_placed += 1
+                                await asyncio.sleep(0.1)
+                            
+                            if orders_placed > 0:
+                                expected_sell = sell_count + orders_placed
+                                self.expected_order_counts[pair] = {'buy': expected_buy, 'sell': expected_sell}
+            
+            # Save expected counts to file (survives restarts)
+            self._save_expected_counts()
             
             return True
             
@@ -1840,6 +1952,9 @@ class ImprovedGridBot:
             
             if CANCEL_ALL_ON_STARTUP:
                 await self.cancel_all_orders()
+                # CRITICAL: Refresh balances after canceling orders to get correct available amounts
+                await asyncio.sleep(1)  # Small delay for Kraken to process cancellations
+                await self.get_account_balance()
             
             # Create initial grid orders for each enabled pair
             Logger.enhanced("📊 Creating initial grid orders...")
